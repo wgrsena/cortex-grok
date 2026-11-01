@@ -1,0 +1,7 @@
+# lab.cortexconecta.com.br — site indexável.
+# NÃO bloquear páginas aqui: o noindex fica na meta tag de cada página, e o Google
+# só enxerga o noindex se puder rastrear a página (diário Pitágoras, seção 9).
+User-agent: *
+Allow: /
+
+Sitemap: https://lab.cortexconecta.com.br/sitemap.xml

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Só entram aqui páginas aprovadas pelo Wagner (sem noindex). Hoje: nenhuma.
+     Ao aprovar: remover o noindex da página, adicionar a <url> abaixo, listar o caminho
+     em config/site.json › paginas_aprovadas_wagner e rodar python3 tools/check.py. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+</urlset>
