@@ -15,8 +15,9 @@ Repositório próprio do Grok/Ara no Conecta Cortex. Escrita livre. Leitura do C
 |---|---|
 | Layout (hero, destaque, lista, rodapé com CTA) | pronto |
 | Requisitos do checklist (12) | 11 feitos, 1 parcial (R8: capas ainda placeholder) |
-| `tools/check.py` | passa: 307 checagens OK, 0 falhas, 4 avisos (3 capas placeholder + WhatsApp). Antes da r2: 292 OK, 0 falhas, 7 avisos |
+| `tools/check.py` | passa: 321 checagens OK, 0 falhas, 4 avisos (3 capas placeholder + WhatsApp). r3: 307 OK; antes da r2: 292 OK, 0 falhas, 7 avisos |
 | `tools/test_check.py` | passa: 2 testes OK (base passa + 10 mutações proibidas, todas pegas) |
+| `tools/sitemap/test_gerar_sitemap.py` | passa: 10 testes OK |
 | Indexação | todas as páginas com `noindex` e sitemap vazio, até o Wagner aprovar |
 | Deploy | **não feito, nem previsto nesta branch** |
 
@@ -29,14 +30,16 @@ assets/css/blog.css           CSS único, mobile-first, 1 cor de acento (--accen
 assets/img/*.png              placeholders 16:9 / 4:3 / 1:1 (1200 px), com XMP IPTC
 assets/img/autor-wagner-sena.jpg  foto real do autor, 160×160 (origem no README › Autor)
 config/site.json              fonte única: número do WhatsApp, código FLUXO-REV, etiqueta, páginas aprovadas
-robots.txt · sitemap.xml      site indexável; sitemap só com páginas aprovadas
+robots.txt · sitemap.xml      GERADOS por tools/sitemap/gerar_sitemap.py; crawlers de IA liberados; sitemap só com páginas aprovadas
 tools/check.py                validação (Python stdlib)
 tools/test_check.py           autoteste do check (unittest)
 tools/gen_placeholders.py     gera os PNG placeholder com XMP DigitalSourceType (stdlib)
 tools/set_whatsapp.py         aplica o número de config/site.json em todos os links wa.me
+tools/sitemap/gerar_sitemap.py  gera sitemap.xml e robots.txt a partir dos posts e do config (stdlib)
+tools/sitemap/test_gerar_sitemap.py  testes do gerador (unittest)
 ```
 
-Rodar: `python3 tools/check.py && python3 tools/test_check.py`. Nenhuma dependência além do Python 3.
+Build: `python3 tools/sitemap/gerar_sitemap.py` (regrava sitemap.xml e robots.txt). Rodar: `python3 tools/check.py && python3 tools/test_check.py && python3 tools/sitemap/test_gerar_sitemap.py`. Nenhuma dependência além do Python 3.
 
 ## Decisões
 
@@ -49,7 +52,7 @@ Rodar: `python3 tools/check.py && python3 tools/test_check.py`. Nenhuma dependê
 7. **Rastreio dos CTAs.** Todo CTA leva `utm_source=lab`, `utm_medium=<posição>`, `utm_campaign=origem-fluxo-reverso` e `ref=FLUXO-REV`. O texto pré-preenchido do wa.me também contém `FLUXO-REV`, e no artigo inclui o `FR-xxx`.
    - O WhatsApp não repassa UTMs para a conversa. A atribuição dentro da conversa depende do texto pré-preenchido, então a Cortex deve ler o `FR-xxx`/`FLUXO-REV` da primeira mensagem.
 8. **Número do WhatsApp num lugar só:** `config/site.json`. O HTML é estático, então `tools/set_whatsapp.py` propaga o número para os links e o check falha se algum `wa.me` divergir.
-9. **noindex por padrão.** O robots.txt **não** bloqueia nada, porque o Google precisa rastrear a página para ver o `noindex` (diário Pitágoras, §9). Página com `noindex` não entra no sitemap, para não gerar o alerta "enviada mas marcada noindex".
+9. **noindex por padrão.** O robots.txt **não** bloqueia nenhuma página do blog (só as pastas internas `/tools/`, `/config/`, `/docs/` e `/README.md`), porque o Google precisa rastrear a página para ver o `noindex` (diário Pitágoras, §9). Página com `noindex` não entra no sitemap, para não gerar o alerta "enviada mas marcada noindex".
 10. **Imagens em PNG gerado por stdlib.** O box não tem exiftool nem Pillow, e não se instala dependência. O XMP IPTC vai num chunk iTXt `XML:com.adobe.xmp`, que é o local padrão. Os placeholders recebem o código honesto `algorithmicMedia`, porque são preenchimento gerado por algoritmo e não por IA. As artes de IA vão com `trainedAlgorithmicMedia` (ver R8).
 11. **Autor: Wagner Sena**, só com dado que tem fonte no Drive (ver › Autor). Foto real, sem avatar e sem IA. `Person` no JSON-LD com name, image, jobTitle, worksFor e description. `sameAs` ficou de fora: não achei URL de perfil (LinkedIn) do Wagner. O artigo tem o bloco visível "Sobre o autor e este conteúdo" (E-E-A-T YMYL), que diz como o texto foi feito.
 12. **Conteúdo YMYL do artigo-exemplo.** Toda afirmação vem da Lei 11.795/2008, com o artigo citado. Os únicos números são os da própria lei. Não há promessa de contemplação, prazo, parcela ou rentabilidade. Tem aviso e bloco de fontes.
@@ -125,8 +128,8 @@ Toda página nova nasce com `<meta name="robots" content="noindex, max-image-pre
 
 1. Na página, trocar para `<meta name="robots" content="max-image-preview:large">`.
 2. Adicionar o caminho (ex.: `artigo-exemplo/index.html`) em `config/site.json › paginas_aprovadas_wagner`.
-3. Adicionar `<url><loc>https://lab.cortexconecta.com.br/artigo-exemplo/</loc><lastmod>AAAA-MM-DD</lastmod></url>` no `sitemap.xml`.
-4. Rodar `python3 tools/check.py`. Ele falha se faltar qualquer um dos três passos.
+3. Rodar `python3 tools/sitemap/gerar_sitemap.py`: a página entra no `sitemap.xml` sozinha, com lastmod e prioridade.
+4. Rodar `python3 tools/check.py`. Ele falha se faltar qualquer um dos três passos ou se o sitemap/robots estiver desatualizado (L7).
 5. Commit com a mensagem `seo: libera indexação de <página> (aprovado por Wagner em AAAA-MM-DD)`.
 6. Depois do deploy, que é outra decisão, reenviar o sitemap no Search Console.
 
@@ -149,8 +152,23 @@ Toda página nova nasce com `<meta name="robots" content="noindex, max-image-pre
 - **`tools/check.py` não lê canônico.** Ele não lê nenhum arquivo canônico, então não houve path para ajustar. Quem lê o `docs/CANONICO_SEO.md` é o gate SEO (`tools/gate_seo/`, PR #5), que valida todo merge do blog contra as seções CANON-SEO-01…11.
 - O conteúdo do blog não foi alterado neste commit. O `noindex` continua, e nada foi para deploy.
 
+## Sitemap e robots (r4, 02/11/2026, t70u)
+
+- **Gerador:** `tools/sitemap/gerar_sitemap.py` (stdlib). Lê todo `index.html` do repo: home = `/index.html`; artigo = página com JSON-LD `Article`/`BlogPosting`/`NewsArticle`; destaque = primeiro link do `<article class="featured">` da home.
+- **sitemap.xml:** URLs absolutas, `lastmod` = data do `datePublished` (home = publicação mais recente), `changefreq` weekly, prioridade home 1.0 · destaque 0.9 · demais artigos 0.8.
+  - Só entram páginas aprovadas pelo Wagner e sem `noindex`. Hoje: **0 URLs**. Home (1.0) e `artigo-exemplo` (0.9) aparecem como pendentes num comentário do XML. Pôr página com `noindex` no sitemap reprova o L4 e gera o alerta "enviada mas marcada noindex" no Search Console.
+- **robots.txt:** `User-agent` próprio com `Allow: /` para GPTBot, ChatGPT-User, ClaudeBot, Claude-SearchBot, PerplexityBot, Google-Extended, Amazonbot, CCBot, Bytespider, anthropic-ai, cohere-ai, Applebot-Extended e Meta-ExternalAgent, mais `User-agent: *` com `Allow: /`. Lista em `config/site.json › crawlers_ia`.
+  - `Disallow` só para pastas internas que existem no repo (`/tools/`, `/config/`, `/docs/`, `/README.md`; config `robots_disallow`), repetido em cada grupo, porque o crawler segue só o grupo que casa com ele.
+- **check.py L7:** falha se algum crawler de IA não estiver liberado, se o sitemap tiver URL fora do domínio, ou se `sitemap.xml`/`robots.txt` divergirem do que o gerador produz.
+- **Domínio = valor único `config/site.json › base_url`**, hoje `https://lab.cortexconecta.com.br` (canonical, og:url, JSON-LD, sitemap e robots).
+  - O placeholder do Wagner para domínio não definido é `https://conectacortex.com.br` (**conecta**cortex). O site usa **cortex**conecta, ordem invertida.
+  - Usar o placeholder só no sitemap/robots faria o sitemap apontar para um host diferente do canonical, e o Google ignora isso. Trocar o `base_url` reprova o check com 7 falhas (L5 canonical/og:url nas 2 páginas e R1 imagens do JSON-LD), porque o HTML tem o domínio fixo.
+  - Por isso o domínio continua `lab.cortexconecta.com.br` **até a decisão de hosting**. Quando ela sair, trocar o `base_url` e as URLs absolutas do HTML no mesmo commit, e rodar o gerador e o check.
+- O conteúdo do blog não foi alterado. O `noindex` continua, e nada foi para deploy.
+
 ## Repositório e branch
 
 - `blog-stripe-clone` publicada em `wgrsena/cortex-grok`; PR #1. Push só fast-forward, nunca force.
 - r2 (01/11/2026): autor real, FR-001 definitivo, bloco E-E-A-T. Diff para revisão em `/workspace/blog-stripe-clone-r2.diff`.
 - r3 (02/11/2026): canônico SEO v1.0.0 em `docs/CANONICO_SEO.md`. Diff em `/workspace/canonico-seo.diff`.
+- r4 (02/11/2026): robots.txt com crawlers de IA + sitemap.xml gerado (commit local, sem push). Diff em `/workspace/robots-sitemap.diff`.

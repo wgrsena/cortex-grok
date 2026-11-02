@@ -1,7 +1,107 @@
-# lab.cortexconecta.com.br — site indexável.
-# NÃO bloquear páginas aqui: o noindex fica na meta tag de cada página, e o Google
+# GERADO por tools/sitemap/gerar_sitemap.py a partir de config/site.json. Não editar à mão.
+# Não bloquear páginas aqui: o noindex fica na meta tag de cada página, e o Google
 # só enxerga o noindex se puder rastrear a página (diário Pitágoras, seção 9).
+# Disallow só para pastas internas do repo (ferramentas, config, docs), repetido em cada grupo
+# porque o crawler segue apenas o grupo mais específico que casa com ele.
+
+# Crawlers de IA liberados explicitamente
+User-agent: GPTBot
+Allow: /
+Disallow: /tools/
+Disallow: /config/
+Disallow: /docs/
+Disallow: /README.md
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /tools/
+Disallow: /config/
+Disallow: /docs/
+Disallow: /README.md
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /tools/
+Disallow: /config/
+Disallow: /docs/
+Disallow: /README.md
+
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /tools/
+Disallow: /config/
+Disallow: /docs/
+Disallow: /README.md
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /tools/
+Disallow: /config/
+Disallow: /docs/
+Disallow: /README.md
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /tools/
+Disallow: /config/
+Disallow: /docs/
+Disallow: /README.md
+
+User-agent: Amazonbot
+Allow: /
+Disallow: /tools/
+Disallow: /config/
+Disallow: /docs/
+Disallow: /README.md
+
+User-agent: CCBot
+Allow: /
+Disallow: /tools/
+Disallow: /config/
+Disallow: /docs/
+Disallow: /README.md
+
+User-agent: Bytespider
+Allow: /
+Disallow: /tools/
+Disallow: /config/
+Disallow: /docs/
+Disallow: /README.md
+
+User-agent: anthropic-ai
+Allow: /
+Disallow: /tools/
+Disallow: /config/
+Disallow: /docs/
+Disallow: /README.md
+
+User-agent: cohere-ai
+Allow: /
+Disallow: /tools/
+Disallow: /config/
+Disallow: /docs/
+Disallow: /README.md
+
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /tools/
+Disallow: /config/
+Disallow: /docs/
+Disallow: /README.md
+
+User-agent: Meta-ExternalAgent
+Allow: /
+Disallow: /tools/
+Disallow: /config/
+Disallow: /docs/
+Disallow: /README.md
+
+# Demais crawlers
 User-agent: *
 Allow: /
+Disallow: /tools/
+Disallow: /config/
+Disallow: /docs/
+Disallow: /README.md
 
 Sitemap: https://lab.cortexconecta.com.br/sitemap.xml

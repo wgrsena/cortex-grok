@@ -8,5 +8,8 @@
   "dominios_cta": ["wa.me", "cortexconecta.com.br", "www.cortexconecta.com.br"],
   "codigo_fr_artigo_exemplo": "FR-001",
   "_fonte_codigo_fr": "Midas FR-SPEC v1.0.0 (01/11/2026): FR-001 é o 1º código emitido, definitivo. Próximo livre: FR-002.",
-  "paginas_aprovadas_wagner": []
+  "paginas_aprovadas_wagner": [],
+  "_dominio": "base_url é o valor único de domínio (canonical, og:url, JSON-LD, sitemap e robots). Placeholder do Wagner para quando não houver domínio definitivo: https://conectacortex.com.br (ver README › Sitemap e robots).",
+  "crawlers_ia": ["GPTBot", "ChatGPT-User", "ClaudeBot", "Claude-SearchBot", "PerplexityBot", "Google-Extended", "Amazonbot", "CCBot", "Bytespider", "anthropic-ai", "cohere-ai", "Applebot-Extended", "Meta-ExternalAgent"],
+  "robots_disallow": ["/tools/", "/config/", "/docs/", "/README.md"]
 }

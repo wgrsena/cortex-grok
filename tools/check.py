@@ -2,7 +2,7 @@
 """Check do blog (stdlib pura). Uso: python3 tools/check.py   → exit 0 se não houver FALHA.
 
 FALHA = viola requisito (bloqueia commit/publicação). AVISO = pendência conhecida (TODO).
-Regras numeradas como no checklist do README (R1–R12) + regras do lab (L1–L6).
+Regras numeradas como no checklist do README (R1–R12) + regras do lab (L1–L7).
 """
 import json
 import re
@@ -14,6 +14,9 @@ from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "tools" / "sitemap"))
+import gerar_sitemap  # noqa: E402
+
 CFG = json.loads((ROOT / "config" / "site.json").read_text(encoding="utf-8"))
 BASE = CFG["base_url"].rstrip("/")
 VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "track", "wbr"}
@@ -295,6 +298,14 @@ def main():
     rb = (ROOT / "robots.txt").read_text(encoding="utf-8")
     r.ok(not re.search(r"^\s*Disallow:\s*/\s*$", rb, re.M), "L4", "robots.txt bloqueia o site (Disallow: /)")
     r.ok(f"Sitemap: {BASE}/sitemap.xml" in rb, "L4", "robots.txt sem linha Sitemap")
+    # L7 robots/sitemap gerados a partir dos posts e do config (tools/sitemap/gerar_sitemap.py)
+    for bot in CFG.get("crawlers_ia", []):
+        grupo = re.search(rf"^User-agent:\s*{re.escape(bot)}\s*\n((?:(?!User-agent:).*\n?)*)", rb, re.M | re.I)
+        r.ok(grupo is not None and re.search(r"^Allow:\s*/\s*$", grupo.group(1), re.M)
+             and not re.search(r"^Disallow:\s*/\s*$", grupo.group(1), re.M), "L7", f"robots.txt não libera {bot} (Allow: /)")
+    r.ok(all(u.startswith(BASE + "/") for u in sitemap_urls), "L7", f"sitemap.xml com URL fora de {BASE}")
+    for n in gerar_sitemap.desatualizados(ROOT):
+        r.ok(False, "L7", f"{n} desatualizado em relação aos posts/config — rode python3 tools/sitemap/gerar_sitemap.py")
     r.ok(CFG["whatsapp_oficial"] != CFG["whatsapp_placeholder"], "PEND", "número oficial do WhatsApp ainda é placeholder (config/site.json)", aviso=True)
     paginas = sorted(p for p in ROOT.rglob("*.html") if ".git" not in p.parts)
     for p in paginas:
