@@ -1,0 +1,21 @@
+{
+  "origem": "repo",
+  "arquivo_repo": "docs/CANONICO_SEO.md",
+  "sha256": "a6e41dd49822bdd453b5195452dc37b9202d57a54579646ae574302cfdbb1dca",
+  "versao_declarada": "1.0.0",
+  "data_declarada": "2026-11-02",
+  "autor_declarado": "Pitágoras",
+  "status_declarado": "FONTE DA VERDADE",
+  "branch_de_origem": "blog-stripe-clone (commit 1f5c287)",
+  "aprovacao_repo": {
+    "por": "Wagner Sena",
+    "data": "2026-11-02",
+    "ref": "t69u",
+    "texto": "Autorização explícita: criar o canônico SEO no repo cortex-grok em docs/CANONICO_SEO.md, porque o conector do Google Drive é só leitura na pasta 01_FONTE DA VERDADE. A regra da pasta do Drive fica dispensada só para este arquivo."
+  },
+  "formato": "secoes-numeradas",
+  "prefixo_id": "CANON-SEO",
+  "severidade_padrao": "bloqueante",
+  "_derivacao": "O arquivo não traz ID SEO-xxx nem severidade. ID derivado mecanicamente do número da seção (## N. → CANON-SEO-NN, 01…11). Severidade 'bloqueante' para todas as seções porque o arquivo se declara 'Status FONTE DA VERDADE' e usa 'reprovação', 'NUNCA', 'PROIBIDA' e 'obrigatória'. Data = cabeçalho (2026-11-02); status 'ativo' = 'FONTE DA VERDADE'. Nenhum conteúdo novo foi criado.",
+  "requisitos_lidos": 11
+}

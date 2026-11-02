@@ -201,5 +201,101 @@ class TestGate(unittest.TestCase):
         self.assertLess(t.index("| 9 |"), t.index("Nota abaixo da tabela."))
 
 
+CANON_SECOES = """# CANÔNICO SEO — TESTE
+Versão 1.0.0 | Data 2026-11-02 | Autor Pitágoras | Aprovação Wagner Sena | Status FONTE DA VERDADE
+
+## 1. REGRA A
+Texto da regra A.
+
+## 2. REGRA B
+Texto da regra B.
+"""
+
+
+def canon_repo(d: Path, texto=CANON_SECOES, aprovacao=True, rel="docs/CANONICO_SEO.md", sha=None, sev="bloqueante"):
+    """Canônico versionado no alvo (formato seções) + meta origem=repo."""
+    a = alvo_com_check(d)
+    (a / rel).parent.mkdir(parents=True, exist_ok=True)
+    (a / rel).write_text(texto, encoding="utf-8")
+    meta = {"origem": "repo", "arquivo_repo": rel, "formato": "secoes-numeradas", "prefixo_id": "CANON-SEO",
+            "severidade_padrao": sev, "sha256": sha or hashlib.sha256((a / rel).read_bytes()).hexdigest()}
+    if aprovacao:
+        meta["aprovacao_repo"] = {"por": "Wagner Sena", "data": "2026-11-02", "ref": "t69u"}
+    m = d / "repo.meta.json"
+    m.write_text(json.dumps(meta), encoding="utf-8")
+    return m, a
+
+
+def at_secoes(**vereditos):
+    return {k.replace("_", "-"): {"revisor": "Cortex Build", "data": "2026-11-02", "commit": "", "veredito": v, "motivo": "m"}
+            for k, v in vereditos.items()}
+
+
+class TestCanonicoRepo(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.d = Path(self.tmp.name)
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def test_parse_secoes_ids_mecanicos(self):
+        from canonico import parse_secoes
+        c = parse_secoes(CANON_SECOES, severidade_padrao="bloqueante", arquivo="docs/CANONICO_SEO.md")
+        self.assertEqual(c.versao, "1.0.0")
+        self.assertEqual([r.id for r in c.requisitos], ["CANON-SEO-01", "CANON-SEO-02"])
+        self.assertTrue(all(r.bloqueante and r.ativo and not r.faltando() for r in c.requisitos))
+        self.assertEqual(c.requisitos[0].requisito, "Texto da regra A.")
+
+    def test_repo_aprovado_passa_com_todas_ok(self):
+        m, a = canon_repo(self.d)
+        r = gate.avaliar(m, a, atestado=at_secoes(CANON_SEO_01="ok", CANON_SEO_02="ok"), mapa={})
+        self.assertEqual(r["resultado"], "PASS", r["bloqueios"])
+
+    def test_repo_sem_aprovacao_bloqueia(self):
+        m, a = canon_repo(self.d, aprovacao=False)
+        r = gate.avaliar(m, a, atestado=at_secoes(CANON_SEO_01="ok", CANON_SEO_02="ok"), mapa={})
+        self.assertIn("GATE-CANON-FORA-DA-PASTA", r["bloqueios"])
+
+    def test_excecao_so_para_o_path_aprovado(self):
+        m, a = canon_repo(self.d, rel="docs/OUTRO.md")
+        r = gate.avaliar(m, a, atestado=at_secoes(CANON_SEO_01="ok", CANON_SEO_02="ok"), mapa={})
+        self.assertIn("GATE-CANON-FORA-DA-PASTA", r["bloqueios"])
+
+    def test_canonico_alterado_no_pr_bloqueia(self):
+        m, a = canon_repo(self.d, sha="0" * 64)
+        r = gate.avaliar(m, a, atestado=at_secoes(CANON_SEO_01="ok", CANON_SEO_02="ok"), mapa={})
+        self.assertIn("GATE-CANON-SHA", r["bloqueios"])
+
+    def test_sem_severidade_no_meta_bloqueia(self):
+        m, a = canon_repo(self.d, sev="")
+        r = gate.avaliar(m, a, mapa={})
+        self.assertIn("GATE-CANON-SEM-SEVERIDADE", r["bloqueios"])
+
+    def test_violado_e_pendente_bloqueiam_com_id(self):
+        m, a = canon_repo(self.d)
+        r = gate.avaliar(m, a, atestado=at_secoes(CANON_SEO_01="violado", CANON_SEO_02="pendente"), mapa={})
+        self.assertEqual(r["bloqueios"], ["CANON-SEO-01", "CANON-SEO-02 (manual pendente)"])
+
+    def test_sem_atestado_nao_passa(self):
+        m, a = canon_repo(self.d)
+        r = gate.avaliar(m, a, mapa={})
+        self.assertEqual(r["resultado"], "BLOCK")
+        self.assertEqual(len(r["manual_pendente"]), 2)
+
+
+class TestCanonChecks(unittest.TestCase):
+    def test_pr1_real_viola_slug_bio_iptc_proporcoes(self):
+        """Roda as checagens automáticas no worktree do PR #1, se existir ao lado (../cg-blog)."""
+        import canon_checks
+        blog = REPO.parent / "cg-blog"
+        if not (blog / "artigo-exemplo" / "index.html").exists():
+            self.skipTest("worktree do blog ausente")
+        res = canon_checks.avaliar(blog)
+        falhou = {k for k, v in res.items() if any(not ok for ok, _ in v)}
+        self.assertTrue({"CANON-SEO-04", "CANON-SEO-05", "CANON-SEO-07", "CANON-SEO-08"} <= falhou)
+        self.assertNotIn("CANON-SEO-01", falhou)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

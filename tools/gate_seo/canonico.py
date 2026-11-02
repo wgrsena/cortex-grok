@@ -16,7 +16,7 @@ import re
 from dataclasses import dataclass, field
 
 RE_ID = re.compile(r"\bSEO-\d{3,}\b")
-RE_VERSAO = re.compile(r"Vers[ãa]o:?\**\s*:?\s*(v\d+(?:\.\d+)*)", re.I)
+RE_VERSAO = re.compile(r"Vers[ãa]o:?\**\s*:?\s*(v\d+(?:\.\d+)*|\d+(?:\.\d+)+)", re.I)  # "v1.3" ou "1.0.0"
 RE_CAMPO = re.compile(r"^\s*[-*]\s*(?:\[[ xX]\]\s*)?(?:\*\*)?([^:*\n]{2,40}?)(?:\*\*)?\s*:\s*(?:\*\*)?\s*(.*)$")
 
 CAMPOS = {
@@ -91,4 +91,55 @@ def parse(texto: str) -> Canonico:
             setattr(atual, chave, valor)
     # requisito = bloco ### que tem o campo Requisito (exclui blocos de teste/checklist sem requisito)
     c.requisitos = [r for r in c.requisitos if r.requisito or r.id]
+    return c
+
+
+# --- Formato "seções numeradas" (docs/CANONICO_SEO.md, v1.0.0) -----------------------------------------
+# Cabeçalho:  "Versão 1.0.0 | Data 2026-11-02 | Autor Pitágoras | Aprovação Wagner Sena | Status FONTE DA VERDADE"
+# Requisito:  "## 1. REGRA DE EMBALAGEM" + parágrafo(s) até a próxima seção.
+# O arquivo não traz ID nem severidade. O ID é derivado mecanicamente do número da seção (CANON-SEO-01…);
+# a severidade vem do .meta.json ("severidade_padrao"), nunca do texto. Sem ela, o gate bloqueia (SEM-SEVERIDADE).
+RE_SECAO = re.compile(r"^##\s+(\d{1,2})\.\s+(.+?)\s*$")
+RE_CAB = re.compile(r"^\s*([A-Za-zÀ-ÿ]+)\s+(.+?)\s*$")
+
+
+def cabecalho(texto: str) -> dict:
+    """Campos do cabeçalho "Chave valor | Chave valor" (primeira linha com "|" antes da 1ª seção)."""
+    for linha in texto.splitlines():
+        if linha.startswith("## "):
+            break
+        if "|" in linha:
+            out = {}
+            for parte in linha.split("|"):
+                m = RE_CAB.match(parte)
+                if m:
+                    out[m.group(1).lower()] = m.group(2)
+            return out
+    return {}
+
+
+def parse_secoes(texto: str, prefixo: str = "CANON-SEO", severidade_padrao: str = "", arquivo: str = "") -> Canonico:
+    c = Canonico()
+    cab = cabecalho(texto)
+    m = RE_VERSAO.search(texto[:3000])
+    c.versao = m.group(1) if m else ""
+    data = cab.get("data", "")
+    status_doc = cab.get("status", "")
+    fonte = " · ".join(x for x in (arquivo, f"autor {cab['autor']}" if cab.get("autor") else "",
+                                    f"aprovação {cab['aprovação']}" if cab.get("aprovação") else "") if x)
+    atual = None
+    for i, linha in enumerate(texto.splitlines(), 1):
+        ms = RE_SECAO.match(linha)
+        if ms:
+            n = int(ms.group(1))
+            atual = Requisito(titulo=f"{n}. {ms.group(2)}", id=f"{prefixo}-{n:02d}", fonte=f"{fonte} · §{n}" if fonte else "",
+                              data=data, severidade=severidade_padrao,
+                              status="ativo" if "FONTE DA VERDADE" in status_doc.upper() else status_doc.lower(), linha=i)
+            c.requisitos.append(atual)
+            continue
+        if linha.startswith("#"):
+            atual = None
+            continue
+        if atual is not None and linha.strip():
+            atual.requisito = (atual.requisito + " " + linha.strip()).strip()
     return c
