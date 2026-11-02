@@ -9,6 +9,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 ART = "artigo-exemplo/index.html"
+AUTOR = "autor/wagner-sena/index.html"
 
 MUTACOES = {
     "capa com lazy": ('fetchpriority="high"', 'fetchpriority="high" loading="lazy"', "[R5]"),
@@ -21,6 +22,10 @@ MUTACOES = {
     "img sem dimensões": ('width="56" height="56" ', "", "[R7]"),
     "CTA sem ref": ("ref=FLUXO-REV", "ref=X", "[L2]"),
     "clickbait": ("<h1>Como funciona", "<h1>O segredo de como funciona", "[R4]"),
+    "autor: foto com lazy": ('fetchpriority="high"', 'fetchpriority="high" loading="lazy"', "[R5]", AUTOR),
+    "autor: link externo solto": ('<li><a href="https://www.linkedin.com/in/wgrsena"', '<li><a href="https://exemplo.com/"', "[L1]", AUTOR),
+    "autor: Giro sem link": ('No YouTube, está no <a href="https://programagiroautomotivo.com.br/wagner" rel="noopener">Giro Automotivo</a>.', "No YouTube, está no Giro Automotivo.", "[L7]", AUTOR),
+    "autor: sem noindex": ('content="noindex, max-image-preview:large"', 'content="max-image-preview:large"', "[L4]", AUTOR),
 }
 
 
@@ -35,11 +40,11 @@ class TestCheck(unittest.TestCase):
         self.assertEqual(code, 0, out)
 
     def test_mutacoes_falham(self):
-        for nome, (de, para, regra) in MUTACOES.items():
+        for nome, (de, para, regra, *arq) in MUTACOES.items():
             with self.subTest(nome), tempfile.TemporaryDirectory() as tmp:
                 raiz = Path(tmp) / "site"
                 shutil.copytree(ROOT, raiz, ignore=shutil.ignore_patterns(".git"))
-                f = raiz / ART
+                f = raiz / (arq[0] if arq else ART)
                 t = f.read_text(encoding="utf-8")
                 self.assertIn(de, t)
                 f.write_text(t.replace(de, para, 1), encoding="utf-8")
