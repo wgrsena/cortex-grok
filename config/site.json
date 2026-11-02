@@ -8,5 +8,7 @@
   "dominios_cta": ["wa.me", "cortexconecta.com.br", "www.cortexconecta.com.br"],
   "codigo_fr_artigo_exemplo": "FR-001",
   "_fonte_codigo_fr": "Midas FR-SPEC v1.0.0 (01/11/2026): FR-001 é o 1º código emitido, definitivo. Próximo livre: FR-002.",
+  "perfis_autor": ["https://www.linkedin.com/in/wgrsena", "https://programagiroautomotivo.com.br/wagner"],
+  "_regra_giro": "Sempre que o Giro Automotivo for citado, linkar https://programagiroautomotivo.com.br/wagner (pedido do Wagner, 02/11/2026).",
   "paginas_aprovadas_wagner": []
 }

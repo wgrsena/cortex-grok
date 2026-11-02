@@ -23,7 +23,7 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-
 .skip:focus { left: 16px; top: 16px; background: var(--bg); padding: 8px 12px; z-index: 10; }
 
 /* Marca (sem menu, sem sidebar) */
-.brand { padding: 20px 0; font-weight: 700; letter-spacing: -0.01em; }
+.brand { padding-top: 20px; padding-bottom: 20px; font-weight: 700; letter-spacing: -0.01em; }
 .brand a { color: var(--ink); text-decoration: none; }
 
 /* Hero: proposta em uma frase */
@@ -89,3 +89,19 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-
   .article .cover { margin: 32px 0 48px; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* Página do autor (/autor/wagner-sena/): foto real em quadrado arredondado; byline usa o recorte "rosto" em círculo */
+.author-hero { display: grid; gap: 20px; padding: 32px 0 24px; border-bottom: 1px solid var(--line); }
+.author-hero h1 { font-size: clamp(2rem, 6vw, 3rem); line-height: 1.08; letter-spacing: -0.03em; margin: 4px 0 8px; }
+.author-hero .lede { font-size: 1.125rem; color: var(--muted); margin: 0 0 16px; max-width: 40ch; }
+.author-photo { margin: 0; }
+.author-photo img { width: 160px; height: 160px; border-radius: var(--radius); background: var(--bg-soft); object-fit: cover; }
+.author-links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 20px; font-weight: 600; font-size: 0.9375rem; }
+.author-bio { padding: 8px 0 8px; }
+.author-posts h2 { font-size: 1.5rem; line-height: 1.25; margin: 2em 0 0; letter-spacing: -0.015em; }
+.author a.author-name { color: var(--ink); text-decoration: none; }
+.author a.author-name:hover { color: var(--accent); }
+@media (min-width: 768px) {
+  .author-hero { grid-template-columns: 240px 1fr; align-items: center; gap: 40px; padding: 56px 0 40px; }
+  .author-photo img { width: 240px; height: 240px; }
+}

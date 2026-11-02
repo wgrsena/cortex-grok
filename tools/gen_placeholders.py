@@ -62,7 +62,7 @@ def main() -> None:
     for prop, w, h in capa:
         png(IMG / f"artigo-exemplo-{prop}.png", w, h, (230, 244, 239), (11, 110, 79),
             "algorithmicMedia", f"PLACEHOLDER capa artigo-exemplo {prop}")
-    # Foto do autor: é a foto real (assets/img/autor-wagner-sena.jpg), não é gerada aqui.
+    # Foto do autor: é a foto real (assets/img/autor/, gerada por tools/gen_autor_fotos.py), não é gerada aqui.
 
 
 if __name__ == "__main__":

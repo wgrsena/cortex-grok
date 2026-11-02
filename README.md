@@ -9,7 +9,7 @@ Repositório próprio do Grok/Ara no Conecta Cortex. Escrita livre. Leitura do C
 > Documento vivo. Atualizar a cada mudança de estado.
 > **Sem deploy.** Nada aqui foi publicado. Código para revisão do Wagner.
 
-## Estado (2026-11-01, r2 22:40 America/Bahia)
+## Estado (2026-11-02, r3, America/Bahia)
 
 | Item | Estado |
 |---|---|
@@ -27,13 +27,15 @@ index.html                    home: hero (1 frase) · card de destaque · lista 
 artigo-exemplo/index.html     template de artigo (YMYL): autor, capa, texto com fonte, aviso, fontes, CTA final com FR
 assets/css/blog.css           CSS único, mobile-first, 1 cor de acento (--accent), fonte do sistema
 assets/img/*.png              placeholders 16:9 / 4:3 / 1:1 (1200 px), com XMP IPTC
-assets/img/autor-wagner-sena.jpg  foto real do autor, 160×160 (origem no README › Autor)
+autor/wagner-sena/index.html  página do autor (ProfilePage + Person com sameAs)
+assets/img/autor/             fotos reais do autor (WebP + JPEG); alternativas/ guarda as outras 2 fotos aprovadas
 config/site.json              fonte única: número do WhatsApp, código FLUXO-REV, etiqueta, páginas aprovadas
 robots.txt · sitemap.xml      site indexável; sitemap só com páginas aprovadas
 tools/check.py                validação (Python stdlib)
 tools/test_check.py           autoteste do check (unittest)
 tools/gen_placeholders.py     gera os PNG placeholder com XMP DigitalSourceType (stdlib)
 tools/set_whatsapp.py         aplica o número de config/site.json em todos os links wa.me
+tools/gen_autor_fotos.py      gera as fotos do autor a partir dos originais do Drive (precisa de Pillow; só build local)
 ```
 
 Rodar: `python3 tools/check.py && python3 tools/test_check.py`. Nenhuma dependência além do Python 3.
@@ -110,14 +112,26 @@ exiftool -XMP-iptcExt:DigitalSourceType artigo-slug-16x9.webp     # conferir
 
 ## Autor: fontes de cada dado
 
-| Dado | Valor usado | Fonte (Drive) |
+Página: `autor/wagner-sena/` (r3, 02/11/2026). Byline do artigo e da home linkam para ela (`rel="author"`).
+
+| Dado | Valor usado | Fonte |
 |---|---|---|
-| Nome | Wagner Sena | arquivo de imagem "Wagner Sena.png" (id `1_UAGhfPUG0DJMpBXfrXRq8tDW8_A2zRx`) e todos os docs da Conecta |
-| Foto | `assets/img/autor-wagner-sena.jpg`, recorte 160×160 da foto acima, fundo branco | mesmo arquivo; foto real, sem geração por IA. Sem `DigitalSourceType` porque a origem da captura não está registrada |
-| Experiência | no setor de consórcios desde 2002 (24 anos), mais de 15 anos em representação | anotação da reunião de 08/10/2026 (doc `1cxu_jgo2Wpi5mMJFaoegEgkU2ljHGcV8GQyz0EKfQIc`, declaração do próprio Wagner) e "experiência do Wagner = 24 anos, desde 2002" no backup de tarefas de 29/10/2026 (doc `1JiIITInnGn-JlG2lSaD_asKybsTjplDo8S8Nu8gjGBk`) |
-| Empresa | Conecta Consórcios (Conecta Soluções Ltda, CNPJ 48.752.043/0001-50), Vitória da Conquista/BA, representante autorizada Disal | backup de 29/10/2026 (mesmo doc acima) |
-| Cargo | "Titular da Conecta Consórcios" | **inferido** de "Conecta 100% de Wagner" (ESSÊNCIA · CONECTA · Empresa, 24/10/2026, doc `1FkookjsneDhJ69Cf1veihUdGuFwr5CdfYgjq-DmBzEY`). Confirmar |
-| sameAs | não preenchido | o backup cita "LinkedIn do Wagner", mas sem URL |
+| Nome | Wagner Sena | pedido do Wagner (02/11/2026) e todos os docs da Conecta |
+| Foto padrão | `assets/img/autor/wagner-sena-azul-retrato-{240,480}.webp` (+ `-480.jpg` para JSON-LD/og) e `-rosto-112.webp` (byline, círculo 56 px) | Drive `1_UAGhfPUG0DJMpBXfrXRq8tDW8_A2zRx` "Wagner Sena.png" (600×750, recorte com fundo transparente), aprovada pelo Wagner em 02/11/2026. Foto real, sem `DigitalSourceType` |
+| Fotos alternativas | `assets/img/autor/alternativas/wagner-sena-{azul-esfumado,preta}-*` | Drive `1n5FYsxoNqjwytLoNB7hDz4fpevWFReJw` (ombros esfumados) e `1JXkhI1diSbtfdnGfYx2l4Yqvac36Ncjn` (camisa preta, 511×640, fundo preto), ambas aprovadas. **Nunca** usar `wagner-frente.png` (`1YJcPsUPzKAGSiGwK5JBPytbziJJo_WDU`, cartão do Giro) |
+| Bio (24 anos de setor automotivo desde 10/03/2002; 15+ anos como representante; 8 anos no Grupo Indiana; equipe melhor do Brasil 6 anos; 500+ profissionais formados; 5 estrelas Google; comissões e 8 primeiras parcelas; pós-contemplação; Giro; podcast) | `autor/wagner-sena/` › Trajetória | declaração do próprio Wagner, 02/11/2026. Texto mantido no sentido original; ver alertas de compliance abaixo |
+| Empresa / cargo | Conecta Consórcios (Conecta Soluções Ltda, CNPJ 48.752.043/0001-50), "Titular da Conecta Consórcios" | backup de 29/10/2026; cargo **inferido** (confirmar) |
+| sameAs | LinkedIn `https://www.linkedin.com/in/wgrsena` e Giro `https://programagiroautomotivo.com.br/wagner` | pedido do Wagner, 02/11/2026; lista em `config/site.json › perfis_autor` |
+
+Regras novas no check: **L1** aceita link externo para `perfis_autor`; **L7** todo texto que cita "Giro Automotivo" precisa linkar `https://programagiroautomotivo.com.br/wagner`. A foto em `.author-photo` segue R5–R7 (sem lazy, `fetchpriority`, width/height), mas fica fora de R1–R3/R8 por não ser banner.
+
+Recorte e geração: `python3 tools/gen_autor_fotos.py /pasta/dos/originais` (coordenadas no topo do script). O original tem só 600 px de largura, então a maior versão é 480 px (sem upscale). Se houver original em resolução maior, regerar com 800 px.
+
+Alertas de compliance da bio (texto **não** alterado, aguardando o Wagner):
+- "As comissões bancam as 8 primeiras parcelas das cartas criadas": pode ser lido como oferta comercial (parcelas pagas pelo vendedor) sem condições, prazo ou regulamento; numa página YMYL pode configurar promessa. Confirmar com a Disal se é permitido divulgar e em que termos.
+- "equipe eleita a melhor do Brasil por 6 anos seguidos": falta quem elegeu e em que anos.
+- "É autoridade em consórcio imobiliário" e "5 estrelas no Google": autodeclaração e dado que muda; ideal citar a fonte (link do perfil Google e data).
+- "formou mais de 500 profissionais": sem fonte verificável.
 
 ## Aprovação para indexar (remover o noindex)
 
@@ -133,7 +147,7 @@ Toda página nova nasce com `<meta name="robots" content="noindex, max-image-pre
 ## Pendências
 
 1. **Número oficial do WhatsApp da Cortex.** Não achei no repo nem no Drive. Hoje é `55XXXXXXXXXXX`; editar `config/site.json` e rodar `tools/set_whatsapp.py`.
-2. **Autor** (R9): feito com Wagner Sena. Falta: (a) o Wagner confirmar que é o autor e o texto da bio; (b) o cargo exato (usei "Titular da Conecta Consórcios", a partir de "Conecta 100% de Wagner"); (c) a URL do LinkedIn para o `sameAs`; (d) quem fez a foto (crédito); (e) opcional: página `/autor/wagner-sena/`.
+2. **Autor** (R9): feito, com página `/autor/wagner-sena/`, foto aprovada e `sameAs` (r3). Falta: (a) o Wagner aprovar o texto final da bio e os alertas de compliance (README › Autor); (b) o cargo exato; (c) crédito da foto; (d) original da foto em resolução maior, se existir.
 3. **Artes finais** (R1–R3, R8) nas 3 proporções, com IPTC `trainedAlgorithmicMedia` se forem de IA. A `og:image` final deve ser JPG/WebP.
 4. **Código FR:** `FR-001` é **definitivo** (Midas FR-SPEC v1.0.0, 01/11/2026; próximo livre FR-002), registrado em `config/site.json › codigo_fr_artigo_exemplo`. As 4 imagens Midas do lote BLOG-20261101 (outro artigo: sequência de contemplação) têm cópias corrigidas com FR-001 no IPTC e passam no `validate_fr.py`; trocar os finais no Drive espera o Wagner. Elas **não** são capa deste artigo-exemplo.
 5. **Aprovação do Wagner** para remover o `noindex` (processo acima).
@@ -146,4 +160,5 @@ Toda página nova nasce com `<meta name="robots" content="noindex, max-image-pre
 ## Repositório e branch
 
 - `blog-stripe-clone` publicada em `wgrsena/cortex-grok`; PR #1. Push só fast-forward, nunca force.
-- r2 (01/11/2026): autor real, FR-001 definitivo, bloco E-E-A-T. Diff para revisão em `/workspace/blog-stripe-clone-r2.diff`.
+- r2 (01/11/2026): autor real, FR-001 definitivo, bloco E-E-A-T.
+- r3 (02/11/2026): página do autor, 3 fotos aprovadas (padrão: azul), bio nova, sameAs, regras L1/L7. Commit local em `blog-stripe-clone-autor` (a partir de `origin/blog-stripe-clone` 4f51fda), sem push. Diff para revisão em `/workspace/blog-stripe-clone-r2.diff`.

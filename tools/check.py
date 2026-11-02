@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parent.parent
 CFG = json.loads((ROOT / "config" / "site.json").read_text(encoding="utf-8"))
 BASE = CFG["base_url"].rstrip("/")
 VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "track", "wbr"}
+GIRO = "https://programagiroautomotivo.com.br/wagner"
 DST_OK = {"trainedAlgorithmicMedia", "compositeSynthetic", "algorithmicMedia", "compositeWithTrainedAlgorithmicMedia"}
 
 PROIBIDAS = [
@@ -186,7 +187,9 @@ def checar_pagina(path: Path, r: Rel, sitemap_urls: set):
     r.ok(len(altas) <= 1, "R6", f"{nome}: mais de uma imagem com fetchpriority=high")
 
     # R1/R2/R3/R8 imagens das capas: arquivo, proporção, pixels, largura, IPTC
-    srcs = {c.attrs.get("src") for c in capas} | {s.attrs.get("srcset") for c in capas for s in c.parent.find_all("source")}
+    # (foto real do autor em .author-photo não é banner: fica fora de R1–R3/R8, mas segue R5–R7)
+    banners = [c for c in capas if not c.has_class_up("author-photo")]
+    srcs = {c.attrs.get("src") for c in banners} | {s.attrs.get("srcset") for c in banners for s in c.parent.find_all("source")}
     for s in filter(None, srcs):
         checar_imagem((path.parent / s).resolve(), r, nome)
 
@@ -247,7 +250,14 @@ def checar_pagina(path: Path, r: Rel, sitemap_urls: set):
         if "cta" in a.attrs.get("class", "").split() or host == "wa.me":
             checar_cta(a, r, nome)
         elif host:
-            r.ok(a.has_class_up("sources"), "L1", f"{nome}: link externo que não é CTA nem fonte: {href}")
+            perfil = href in CFG.get("perfis_autor", [])
+            r.ok(a.has_class_up("sources") or perfil, "L1", f"{nome}: link externo que não é CTA, fonte nem perfil do autor: {href}")
+        # L7 Giro Automotivo citado = link para o perfil do Wagner no programa
+        if "giro automotivo" in a.text().lower():
+            r.ok(href == GIRO, "L7", f"{nome}: link do Giro Automotivo deve ser {GIRO}")
+    for n in doc.iter():
+        if n.tag in ("p", "li") and "giro automotivo" in n.text().lower():
+            r.ok(any(x.attrs.get("href") == GIRO for x in n.find_all("a")), "L7", f"{nome}: Giro Automotivo citado sem link para {GIRO}")
 
     # R4/R10/R11 vocabulário proibido e clickbait
     visivel = " ".join([doc.text(), head_meta.get("description", "")] + [i.attrs.get("alt", "") for i in doc.find_all("img")])
