@@ -1,0 +1,109 @@
+{
+  "versao": "0.8.0",
+  "hoje": "2026-11-01",
+  "data_coleta": "2026-10-25",
+  "idade_coleta_dias": 7,
+  "max_dias_coleta": 8,
+  "fr": "FR-001",
+  "lacuna_texto": "dado não disponível",
+  "fontes": {
+    "fonte-portal": "Portal Clique Vendas (Disal), coleta 2026-10-25, Drive 11Pr1j57-yMF27qZWgzLSUEpRrmFFjB6K7UVOyJ8HYvE",
+    "fonte-calendario": "WebDisal, calendário de assembleias, coleta 2026-10-25, Drive 1rx8tAWOniq-TcixhE6RHn6lpFtlgG08n9LlCwMR7gGc",
+    "fonte-motor": "Arquimedes (vendor/arquimedes), posição 1 do ordenamento da faixa"
+  },
+  "cards": [
+    {
+      "faixa": 50000,
+      "combinacao": "F50-1",
+      "n_cartas": 1,
+      "pagina": "https://cortexconecta.com.br/oportunidades/50/",
+      "credito": {
+        "texto": "R$ 55.000,00",
+        "fonte": "fonte-portal",
+        "lacuna": null
+      },
+      "parcela": {
+        "texto": "R$ 2.408,79",
+        "fonte": "fonte-portal",
+        "lacuna": null
+      },
+      "assembleia": {
+        "texto": "26/11/2026",
+        "fonte": "fonte-calendario",
+        "lacuna": null
+      },
+      "entrada": {
+        "texto": "dado não disponível",
+        "fonte": null,
+        "lacuna": "entrada"
+      },
+      "lance": {
+        "texto": "dado não disponível",
+        "fonte": null,
+        "lacuna": "lance"
+      }
+    },
+    {
+      "faixa": 100000,
+      "combinacao": "F100-1",
+      "n_cartas": 2,
+      "pagina": "https://cortexconecta.com.br/oportunidades/100/",
+      "credito": {
+        "texto": "R$ 110.000,00",
+        "fonte": "fonte-portal",
+        "lacuna": null
+      },
+      "parcela": {
+        "texto": "R$ 5.472,36",
+        "fonte": "fonte-portal",
+        "lacuna": null
+      },
+      "assembleia": {
+        "texto": "26/11/2026",
+        "fonte": "fonte-calendario",
+        "lacuna": null
+      },
+      "entrada": {
+        "texto": "dado não disponível",
+        "fonte": null,
+        "lacuna": "entrada"
+      },
+      "lance": {
+        "texto": "dado não disponível",
+        "fonte": null,
+        "lacuna": "lance"
+      }
+    },
+    {
+      "faixa": 200000,
+      "combinacao": "F200-1",
+      "n_cartas": 1,
+      "pagina": "https://cortexconecta.com.br/oportunidades/200/",
+      "credito": {
+        "texto": "R$ 236.973,00",
+        "fonte": "fonte-portal",
+        "lacuna": null
+      },
+      "parcela": {
+        "texto": "R$ 8.958,06",
+        "fonte": "fonte-portal",
+        "lacuna": null
+      },
+      "assembleia": {
+        "texto": "26/11/2026",
+        "fonte": "fonte-calendario",
+        "lacuna": null
+      },
+      "entrada": {
+        "texto": "dado não disponível",
+        "fonte": null,
+        "lacuna": "entrada"
+      },
+      "lance": {
+        "texto": "dado não disponível",
+        "fonte": null,
+        "lacuna": "lance"
+      }
+    }
+  ]
+}
