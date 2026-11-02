@@ -68,14 +68,18 @@ alter table fato_cotas
 
 No contrato de `calculateLedger`: `lastPaidInstallment ← ultima_parcela_paga` e `dilutionFloorPercent ← piso_diluicao_pct`. Se `ultima_parcela_paga` for null, `calculateLedger` não dilui e devolve um aviso (é o mesmo comportamento de `aplicarLance` no Lab).
 
-## 5. Premissas a validar (Wagner ou Disal)
+## 5. Premissas: default adotado (Wagner 01/11)
 
-- **P1.** Redação da 12.2 b ("diferença inferior a 50%"): confirmar que significa nova parcela ≥ 50% × última paga, e não "redução ≥ 50%".
-- **P2.** O seguro de vida entra na base? O proxy de catálogo inclui seguro e infla o piso.
-- **P3.** "Última parcela paga" (12.2 b) ou "última parcela cobrada" (5.6.2 a)? Diferem quando a cota está inadimplente ou houve reajuste.
-- **P4.** Pode simular diluição na pré-venda com a estimativa, ou só depois de haver extrato?
-- **P5.** Grupos antigos seguem edições anteriores do regulamento? O piso pode ser outro; por isso `regulamento_edicao` fica por cota.
-- **P6.** Regra da sobra: no caso real do Lab a parcela ficou R$ 7–9 abaixo de 50% exatos, e a ordem "dilui até o piso, depois quita" (H1) não está confirmada.
+Wagner decidiu em 01/11/2026 adotar o default mais conservador de cada premissa. Implementado em `ledger/calculateLedger.ts` v1.0.0. Ainda vale confirmar com a Disal; se ela responder diferente, muda o default, não a estrutura.
+
+- **P1. default adotado (Wagner 01/11):** nova parcela ≥ 50% × última parcela paga. O piso em centavos arredonda para cima (`teto(base × 50 / 100)`), então a parcela nunca fica abaixo de 50%.
+- **P2. default adotado (Wagner 01/11):** o seguro fica na base. É o piso mais alto, ou seja, a diluição prometida é a menor. A estimativa de catálogo (`valor_1a_parcela_c_seguro`) sai com aviso.
+- **P3. default adotado (Wagner 01/11):** usa a "última parcela paga" (12.2 b), vinda do extrato. Sem extrato, `lastPaidInstallment = null` → `status: "sem_extrato"`, sem simulação e todos os números `null`. Nunca vira 0.
+- **P4. default adotado (Wagner 01/11):** na pré-venda, simula só como estimativa interna (`lastPaidInstallmentFonte: "estimativa_catalogo"` → `estimativa: true` mais aviso). O número não vai ao lead.
+- **P5. default adotado (Wagner 01/11):** o piso de 50% só vale para a 27ª edição. Cota com `regulamentoEdicao` diferente de 27 → `status: "edicao_nao_suportada"`, sem simulação. Sem edição informada, assume a 27ª.
+- **P6. default adotado (Wagner 01/11):** usa a ordem H1. Primeiro dilui todas as parcelas restantes até o piso; o excedente quita parcelas inteiras, no valor do piso, a partir da última (12.2 c). O resto que não fecha uma parcela, assim como os centavos da divisão, fica em `sobraCents` e não é rateado. O caso do Lab (R$ 7–9 abaixo de 50%) segue sem explicação, por isso o código nunca fura o piso.
+
+Lance fixo: nunca dilui (12.3 / 16.12.3) e vai para a ordem inversa, mesmo com opção de diluição, que gera aviso. Também não depende de extrato.
 
 ## 6. O que falta
 
