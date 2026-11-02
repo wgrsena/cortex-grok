@@ -143,7 +143,14 @@ Toda página nova nasce com `<meta name="robots" content="noindex, max-image-pre
 9. **Cor de acento** da marca: hoje é provisória.
 10. **Hospedagem:** confirmar como a HighLevel serve estáticos no subdomínio (diretórios com `index.html`, PNG).
 
+## Canônico SEO (`docs/CANONICO_SEO.md`)
+
+- **Arquivo canônico SEO no repo**: `docs/CANONICO_SEO.md`, v1.0.0 (2026-11-02, Pitágoras, aprovação Wagner Sena), sha256 `a6e41dd49822bdd453b5195452dc37b9202d57a54579646ae574302cfdbb1dca`. Gravado byte a byte como o Wagner mandou (t69u, 2026-11-02). Ele fica no repo porque a pasta `01_FONTE DA VERDADE` do Drive é só leitura para o conector.
+- **`tools/check.py` não lê canônico.** Ele não lê nenhum arquivo canônico, então não houve path para ajustar. Quem lê o `docs/CANONICO_SEO.md` é o gate SEO (`tools/gate_seo/`, PR #5), que valida todo merge do blog contra as seções CANON-SEO-01…11.
+- O conteúdo do blog não foi alterado neste commit. O `noindex` continua, e nada foi para deploy.
+
 ## Repositório e branch
 
 - `blog-stripe-clone` publicada em `wgrsena/cortex-grok`; PR #1. Push só fast-forward, nunca force.
 - r2 (01/11/2026): autor real, FR-001 definitivo, bloco E-E-A-T. Diff para revisão em `/workspace/blog-stripe-clone-r2.diff`.
+- r3 (02/11/2026): canônico SEO v1.0.0 em `docs/CANONICO_SEO.md`. Diff em `/workspace/canonico-seo.diff`.
