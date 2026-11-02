@@ -1,0 +1,12 @@
+{
+  "_comment": "Fonte única de configuração do lab. Trocar o número aqui e rodar: python3 tools/set_whatsapp.py",
+  "base_url": "https://lab.cortexconecta.com.br",
+  "whatsapp_oficial": "55XXXXXXXXXXX",
+  "whatsapp_placeholder": "55XXXXXXXXXXX",
+  "codigo_fluxo": "FLUXO-REV",
+  "etiqueta_origem": "origem-fluxo-reverso",
+  "dominios_cta": ["wa.me", "cortexconecta.com.br", "www.cortexconecta.com.br"],
+  "codigo_fr_artigo_exemplo": "FR-001",
+  "_fonte_codigo_fr": "Midas FR-SPEC v1.0.0 (01/11/2026): FR-001 é o 1º código emitido, definitivo. Próximo livre: FR-002.",
+  "paginas_aprovadas_wagner": []
+}
