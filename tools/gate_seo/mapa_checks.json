@@ -1,0 +1,24 @@
+{
+  "_doc": "ID do requisito canônico (SEO-xxx) → regras do tools/check.py do blog que o verificam. Só entra aqui ID que existe no canônico. Vazio enquanto o canônico não tiver IDs: tudo bloqueante vira verificação manual.",
+  "regras_check_py": {
+    "R1": "JSON-LD Article com 3 imagens 16x9/4x3/1x1 rastreáveis",
+    "R2": "imagem do Article com ≥ 50.000 px",
+    "R3": "imagem ≥ 1200 px e max-image-preview:large (Discover)",
+    "R4": "título sem clickbait/caixa alta",
+    "R5": "capa (LCP) sem loading=lazy",
+    "R6": "capa com fetchpriority=high, só uma",
+    "R7": "width/height em img/source/iframe/video (CLS)",
+    "R8": "IPTC DigitalSourceType válido",
+    "R9": "author Person com name e image",
+    "R10": "aviso YMYL / vocabulário proibido",
+    "R11": "vocabulário proibido em YMYL",
+    "R12": "número com fonte + bloco de fontes",
+    "L1": "CTA em domínio permitido; link externo só CTA ou fonte",
+    "L2": "UTMs + ref=FLUXO-REV",
+    "L3": "número do wa.me = config/site.json",
+    "L4": "noindex até aprovação; sitemap coerente; robots.txt não bloqueia",
+    "L5": "canonical/og:url; 1 h1",
+    "L6": "CTA no texto com código FR; sem <button>"
+  },
+  "mapa": {}
+}
