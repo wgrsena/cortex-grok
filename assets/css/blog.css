@@ -69,6 +69,8 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-
 .sources { font-size: 0.9375rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 16px; margin-top: 32px; }
 .sources h2 { font-size: 1rem; margin: 0 0 8px; color: var(--ink); }
 .cta-end { font-size: 1.125rem; font-weight: 500; }
+.about-author { border-top: 1px solid var(--line); margin: 32px 0 0; padding-top: 16px; font-size: 0.9375rem; }
+.about-author h2 { font-size: 1rem; margin: 0 0 8px; color: var(--ink); }
 
 /* Rodapé mínimo com CTA */
 .footer { border-top: 1px solid var(--line); padding: 32px 0 48px; font-size: 0.9375rem; color: var(--muted); }
