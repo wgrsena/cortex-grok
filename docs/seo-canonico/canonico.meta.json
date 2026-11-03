@@ -1,0 +1,39 @@
+{
+  "origem": "repo",
+  "arquivo_repo": "docs/CANONICO_SEO.md",
+  "sha256": "00f85be0162fa0cea5cfc18d92553e5a16120b8f654c580083db6bdd739f9ab8",
+  "versao_declarada": "1.1.0",
+  "data_declarada": "2026-11-02",
+  "autor_declarado": "Pitágoras",
+  "status_declarado": "FONTE DA VERDADE",
+  "branch_de_origem": "blog-stripe-clone (commit 498f5f9)",
+  "aprovacao_repo": {
+    "por": "Wagner Sena",
+    "data": "2026-11-02",
+    "ref": "t69u",
+    "texto": "Autorização explícita: criar o canônico SEO no repo cortex-grok em docs/CANONICO_SEO.md, porque o conector do Google Drive é só leitura na pasta 01_FONTE DA VERDADE. A regra da pasta do Drive fica dispensada só para este arquivo."
+  },
+  "formato": "secoes-numeradas",
+  "prefixo_id": "CANON-SEO",
+  "severidade_padrao": "bloqueante",
+  "_derivacao": "O arquivo não traz ID SEO-xxx nem severidade. ID derivado mecanicamente do número da seção (## N. → CANON-SEO-NN, 01…11). Severidade 'bloqueante' para todas as seções porque o arquivo se declara 'Status FONTE DA VERDADE' e usa 'reprovação', 'NUNCA', 'PROIBIDA' e 'obrigatória'. Data = cabeçalho (2026-11-02); status 'ativo' = 'FONTE DA VERDADE'. Nenhum conteúdo novo foi criado.",
+  "requisitos_lidos": 11,
+  "aprovacao_relaxamento": {
+    "por": "Wagner Sena",
+    "data": "2026-11-02",
+    "ref": "t71u",
+    "texto": "Autorização explícita para relaxar §2, §3, §4, §5, §6, §7, §8 e §10 do docs/CANONICO_SEO.md (v1.1.0). §1, §9 e §11 sem mudança; embalagem (§1) e citação (§3) seguem duras."
+  },
+  "severidade_por_secao": {
+    "CANON-SEO-04": "aviso"
+  },
+  "_severidade_v110": "v1.1.0 §4 diz 'Slug sem ID de criativo = aviso (não reprova)': CANON-SEO-04 tem severidade 'aviso' (reportado, não bloqueia). §7 (versão do FR) diz 'não trava': a versão não é checada, mas os campos IPTC continuam obrigatórios. §8: a regra dura é 'todo asset passa FR-001 antes de publicar'; as proporções são informativas. §10: a única etapa bloqueante do fluxo é a aprovação do Wagner (docs/seo-canonico/aprovacoes/PR<n>.json). As demais seções seguem 'bloqueante'.",
+  "historico": [
+    {
+      "versao": "1.0.0",
+      "sha256": "a6e41dd49822bdd453b5195452dc37b9202d57a54579646ae574302cfdbb1dca",
+      "aprovacao": "t69u",
+      "branch": "blog-stripe-clone (commit 1f5c287)"
+    }
+  ]
+}
