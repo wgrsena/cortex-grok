@@ -1,0 +1,12 @@
+{
+  "_doc": "Aprovação do Wagner Sena para o PR #1 (§10 do docs/CANONICO_SEO.md v1.1.0: única etapa bloqueante do fluxo). Vale só para o commit indicado.",
+  "_pr": 1,
+  "CANON-SEO-10": {
+    "por": "Wagner Sena",
+    "data": "2026-11-02",
+    "ref": "t71u",
+    "pr": 1,
+    "commit": "ec01233751e089e5ada3cf74f02e2b0c0d5c9299",
+    "texto": "Relaxar o canônico SEO (v1.1.0) e, se o check.py passar ou falhar só em avisos, fazer merge do PR 1 em main mantendo noindex, sem deploy. A aprovação é condicionada ao gate passar; não dispensa as regras duras do canônico (§1, §3, §8 FR-001)."
+  }
+}

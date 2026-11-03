@@ -284,8 +284,56 @@ class TestCanonicoRepo(unittest.TestCase):
         self.assertEqual(len(r["manual_pendente"]), 2)
 
 
+class TestCanonV110(unittest.TestCase):
+    """v1.1.0 (t71u): severidade por seção (§4 = aviso) e aprovação do Wagner (§10)."""
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.d = Path(self.tmp.name)
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def test_severidade_por_secao_vira_aviso_e_nao_bloqueia(self):
+        from canonico import parse_secoes
+        c = parse_secoes(CANON_SECOES, severidade_padrao="bloqueante", severidade_por_secao={"CANON-SEO-02": "aviso"})
+        self.assertEqual([r.bloqueante for r in c.requisitos], [True, False])
+
+    def test_aviso_aparece_na_saida(self):
+        m, a = canon_repo(self.d)
+        meta = json.loads(m.read_text()); meta["severidade_por_secao"] = {"CANON-SEO-02": "aviso"}; m.write_text(json.dumps(meta))
+        orig = gate.canon_checks.avaliar
+        gate.canon_checks.avaliar = lambda alvo: {"CANON-SEO-02": [(False, "slug sem ID")]}
+        try:
+            r = gate.avaliar(m, a, atestado=at_secoes(CANON_SEO_01="ok"), mapa={})
+        finally:
+            gate.canon_checks.avaliar = orig
+        self.assertEqual(r["resultado"], "PASS", r["bloqueios"])
+        self.assertEqual([v["id"] for v in r["avisos"]], ["CANON-SEO-02"])
+        self.assertIn("AVISO CANON-SEO-02", gate.texto(r))
+
+    def test_aprovacao_wagner(self):
+        ok, _ = gate.aprovacao_wagner({"CANON-SEO-10": {"por": "Wagner Sena", "data": "2026-11-02", "ref": "t71u", "commit": "abc1234ffff"}}, "abc1234")
+        self.assertTrue(ok)
+        self.assertFalse(gate.aprovacao_wagner({}, "abc1234")[0])
+        self.assertFalse(gate.aprovacao_wagner({"CANON-SEO-10": {"por": "Wagner Sena", "data": "d", "ref": "r", "commit": "0000000"}}, "abc1234")[0])
+        self.assertFalse(gate.aprovacao_wagner({"CANON-SEO-10": {"por": "Outro", "data": "d", "ref": "r", "commit": "abc1234"}}, "abc1234")[0])
+
+    def test_bio_do_autor_fora_da_citacao_mas_dentro_da_embalagem(self):
+        import canon_checks
+        a = self.d / "s"; a.mkdir()
+        (a / "index.html").write_text('<html><body><p>Texto.</p><section class="about-author"><p>5 estrelas. A conferir.</p></section>'
+                                      '<p data-fonte="Declaração do próprio Wagner Sena">Fonte: Google</p><p>grupo Disal</p></body></html>', encoding="utf-8")
+        r = canon_checks.avaliar(a)
+        self.assertTrue(all(ok for ok, _ in r["CANON-SEO-03"]), r["CANON-SEO-03"])
+        self.assertFalse(all(ok for ok, _ in r["CANON-SEO-01"]))
+
+    def test_sem_baseline_lighthouse_falha_cwv(self):
+        import canon_checks
+        self.assertFalse(canon_checks.cwv(self.d)[0][0])
+
+
 class TestCanonChecks(unittest.TestCase):
-    def test_pr1_real_viola_slug_bio_iptc_proporcoes(self):
+    def test_pr1_real_v110(self):
         """Roda as checagens automáticas no worktree do PR #1, se existir ao lado (../cg-blog)."""
         import canon_checks
         blog = REPO.parent / "cg-blog"
@@ -293,8 +341,10 @@ class TestCanonChecks(unittest.TestCase):
             self.skipTest("worktree do blog ausente")
         res = canon_checks.avaliar(blog)
         falhou = {k for k, v in res.items() if any(not ok for ok, _ in v)}
-        self.assertTrue({"CANON-SEO-04", "CANON-SEO-05", "CANON-SEO-07", "CANON-SEO-08"} <= falhou)
+        self.assertTrue({"CANON-SEO-07", "CANON-SEO-08"} <= falhou, falhou)  # capas placeholder sem FR-001
+        self.assertIn("CANON-SEO-04", falhou)  # slug sem ID (aviso na v1.1.0)
         self.assertNotIn("CANON-SEO-01", falhou)
+        self.assertNotIn("CANON-SEO-03", falhou)
 
 
 if __name__ == "__main__":

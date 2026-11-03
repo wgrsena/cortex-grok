@@ -118,7 +118,10 @@ def cabecalho(texto: str) -> dict:
     return {}
 
 
-def parse_secoes(texto: str, prefixo: str = "CANON-SEO", severidade_padrao: str = "", arquivo: str = "") -> Canonico:
+def parse_secoes(texto: str, prefixo: str = "CANON-SEO", severidade_padrao: str = "", arquivo: str = "",
+                  severidade_por_secao: dict = None) -> Canonico:
+    """severidade_por_secao (do .meta.json) sobrepõe a padrão por ID, ex. {"CANON-SEO-04": "aviso"} (v1.1.0 §4)."""
+    sev_sec = severidade_por_secao or {}
     c = Canonico()
     cab = cabecalho(texto)
     m = RE_VERSAO.search(texto[:3000])
@@ -132,8 +135,9 @@ def parse_secoes(texto: str, prefixo: str = "CANON-SEO", severidade_padrao: str 
         ms = RE_SECAO.match(linha)
         if ms:
             n = int(ms.group(1))
-            atual = Requisito(titulo=f"{n}. {ms.group(2)}", id=f"{prefixo}-{n:02d}", fonte=f"{fonte} · §{n}" if fonte else "",
-                              data=data, severidade=severidade_padrao,
+            rid = f"{prefixo}-{n:02d}"
+            atual = Requisito(titulo=f"{n}. {ms.group(2)}", id=rid, fonte=f"{fonte} · §{n}" if fonte else "",
+                              data=data, severidade=sev_sec.get(rid, severidade_padrao),
                               status="ativo" if "FONTE DA VERDADE" in status_doc.upper() else status_doc.lower(), linha=i)
             c.requisitos.append(atual)
             continue

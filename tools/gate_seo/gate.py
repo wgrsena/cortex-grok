@@ -82,7 +82,7 @@ def carregar_canonico(meta_path: Path, alvo: Path = None):
                       f"o arquivo lido está em '{meta.get('pasta_drive_nome', '?')}', não em 00_CONECTA CORTEX › 01_FONTE DA VERDADE"))
     if meta.get("formato") == "secoes-numeradas":
         c = parse_secoes(dados.decode("utf-8"), meta.get("prefixo_id", "CANON-SEO"),
-                         meta.get("severidade_padrao", ""), meta.get("arquivo", ""))
+                         meta.get("severidade_padrao", ""), meta.get("arquivo", ""), meta.get("severidade_por_secao"))
     else:
         c = parse(dados.decode("utf-8"))
     if not c.versao:
@@ -134,13 +134,28 @@ def diff_info(alvo: Path, base: str):
     return head, sorted(arquivos)
 
 
-def avaliar(meta_path: Path, alvo: Path, base: str = "", atestado: dict = None, mapa: dict = None):
+def aprovacao_wagner(aprov: dict, head: str):
+    """§10 v1.1.0: única etapa bloqueante = aprovação do Wagner registrada para o commit do PR (por, data, ref, commit)."""
+    ap = (aprov or {}).get("CANON-SEO-10") or {}
+    if not ap:
+        return False, "sem aprovação do Wagner registrada para este PR (docs/seo-canonico/aprovacoes/)"
+    if not (ap.get("por") == "Wagner Sena" and ap.get("data") and ap.get("ref")):
+        return False, "registro de aprovação incompleto (precisa de por=Wagner Sena, data e ref)"
+    c = ap.get("commit") or ""
+    if not c or not head or not (c.startswith(head) or head.startswith(c)):
+        return False, f"aprovação registrada para o commit {c or '(nenhum)'}, não para {head or '?'}"
+    return True, f"aprovação do Wagner ({ap['ref']}, {ap['data']}) para o commit {head or '?'}"
+
+
+def avaliar(meta_path: Path, alvo: Path, base: str = "", atestado: dict = None, mapa: dict = None, aprovacao: dict = None):
     atestado = atestado or {}
     mapa = mapa if mapa is not None else json.loads((AQUI / "mapa_checks.json").read_text(encoding="utf-8"))["mapa"]
     meta, c, probs = carregar_canonico(meta_path, alvo)
     head, arquivos = diff_info(alvo, base) if (alvo / ".git").exists() else ("", [])
     disp, falhas_chk, _ = rodar_check(alvo)
     auto_canon = canon_checks.avaliar(alvo) if meta.get("formato") == "secoes-numeradas" else {}
+    if auto_canon and c and any(r.id == "CANON-SEO-10" for r in c.requisitos):
+        auto_canon["CANON-SEO-10"] = [aprovacao_wagner(aprovacao, head)]
     res = {
         "commit": head, "arquivos_no_diff": len(arquivos),
         "canonico": {"arquivo": meta.get("arquivo"), "drive_id": meta.get("drive_id"), "versao": c.versao if c else "",
@@ -148,13 +163,16 @@ def avaliar(meta_path: Path, alvo: Path, base: str = "", atestado: dict = None, 
                      "requisitos": len(c.requisitos) if c else 0, "origem": meta.get("origem", "drive"),
                      "aprovacao_repo": meta.get("aprovacao_repo") if meta.get("origem") == "repo" else None},
         "estrutura": [{"codigo": k, "msg": m} for k, m in probs],
-        "violados": [], "manual_pendente": [], "manual_atestado": [], "auto_ok": [],
+        "violados": [], "manual_pendente": [], "manual_atestado": [], "auto_ok": [], "avisos": [],
         "check_py": {"disponivel": disp, "falhas": falhas_chk},
     }
     mapeadas = set()
     if c and not probs:
         for r in c.requisitos:
             if not (r.ativo and r.bloqueante):
+                if r.ativo and r.id in auto_canon:  # severidade "aviso" (ex.: §4 v1.1.0): reporta, não bloqueia
+                    res["avisos"].append({"id": r.id, "titulo": r.titulo, "severidade": r.severidade,
+                                          "falhas": [m for ok, m in auto_canon[r.id] if not ok]})
                 continue
             regras = checks_do_requisito(r, mapa)
             at = atestado.get(r.id) or {}
@@ -213,6 +231,8 @@ def texto(res, pr=None):
         L.append(f"  BLOCK {m['id']} verificação manual pendente: {m['titulo']} ({m['motivo']})")
     for m in res["manual_atestado"]:
         L.append(f"  ok    {m['id']} manual atestado por {m['revisor']} em {m['data']}")
+    for v in res["avisos"]:
+        L.append(f"  AVISO {v['id']} ({v['titulo']}, severidade {v['severidade']}, não bloqueia): " + ("; ".join(v["falhas"]) or "ok"))
     for v in res["auto_ok"]:
         L.append(f"  ok    {v['id']} automático ({', '.join(v['regras'])})")
     chk = res["check_py"]
@@ -231,6 +251,9 @@ def registrar_readme(readme: Path, res, pr):
     sha = cn["sha256"] or "—"
     versao = f"{cn['versao'] or 'sem versão'} · `{cn['arquivo'] or 'ausente'}` · `{sha if cn.get('origem') == 'repo' else sha[:12]}`"
     resultado = res["resultado"] + (": " + ", ".join(res["bloqueios"]) if res["bloqueios"] else "")
+    av = [v["id"] for v in res.get("avisos", []) if v["falhas"]]
+    if av:
+        resultado += " · avisos (não bloqueiam): " + ", ".join(av)
     linha = f"| {agora} | {pr or '—'} | `{res['commit']}` | {versao} | {resultado} |\n"
     ini = t.index(cab)
     prox = t.find("\n## ", ini + len(cab))
@@ -250,6 +273,7 @@ def main(argv=None):
     ap.add_argument("--base", default="", help="ref base do diff (ex.: origin/main)")
     ap.add_argument("--pr", default="")
     ap.add_argument("--atestado", default="", help="JSON {SEO-xxx: {revisor, data, commit, nota}}")
+    ap.add_argument("--aprovacao", default="", help="JSON {CANON-SEO-10: {por, data, ref, commit}} (aprovação do Wagner, §10)")
     ap.add_argument("--registrar-readme", default="")
     ap.add_argument("--json", action="store_true")
     a = ap.parse_args(argv)
@@ -258,7 +282,8 @@ def main(argv=None):
         print(f"alvo não existe: {alvo}", file=sys.stderr)
         return 2
     at = json.loads(Path(a.atestado).read_text(encoding="utf-8")) if a.atestado else {}
-    res = avaliar(Path(a.canonico), alvo, a.base, at)
+    apv = json.loads(Path(a.aprovacao).read_text(encoding="utf-8")) if a.aprovacao else {}
+    res = avaliar(Path(a.canonico), alvo, a.base, at, aprovacao=apv)
     print(json.dumps(res, ensure_ascii=False, indent=2) if a.json else texto(res, a.pr))
     if a.registrar_readme:
         registrar_readme(Path(a.registrar_readme), res, a.pr)

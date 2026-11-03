@@ -10,17 +10,17 @@ Repositório próprio do Grok/Ara no Conecta Cortex. Escrita livre. Leitura do C
 > Violou → merge bloqueado, com o ID do requisito. Cada leitura fica registrada abaixo com a versão do canônico.
 > Sem dependência nova (Python 3 stdlib). Sem deploy. O arquivo do Drive é do Pitágoras: o gate só lê.
 
-## Estado (2026-11-02 r2, America/Bahia)
+## Estado (2026-11-02 r3, America/Bahia)
 
 | Item | Estado |
 |---|---|
-| **Canônico vigente** | **`docs/CANONICO_SEO.md` v1.0.0** (no repo; branch `blog-stripe-clone`, commit `1f5c287`). sha256 `a6e41dd49822bdd453b5195452dc37b9202d57a54579646ae574302cfdbb1dca`, 11 seções → `CANON-SEO-01…11`, todas bloqueantes. Meta: `docs/seo-canonico/canonico.meta.json` |
+| **Canônico vigente** | **`docs/CANONICO_SEO.md` v1.1.0** (no repo; branch `blog-stripe-clone`, commit `498f5f9`). sha256 `00f85be0162fa0cea5cfc18d92553e5a16120b8f654c580083db6bdd739f9ab8`, 11 seções → `CANON-SEO-01…11`. Todas são bloqueantes, menos CANON-SEO-04, que é aviso desde a v1.1.0. Meta: `docs/seo-canonico/canonico.meta.json`. A v1.0.0 (`a6e41dd4…1dca`, t69u) ficou no `historico` do meta |
 | Exceção da pasta do Drive | aprovada pelo Wagner (t69u, 2026-11-02): o conector do Drive é só leitura em `01_FONTE DA VERDADE`, por isso o canônico fica no repo. Vale **só** para `docs/CANONICO_SEO.md` e só com `aprovacao_repo` no meta |
 | Arquivo canônico em `01_FONTE DA VERDADE` (Drive) | ausente. A pasta tem só o `Conecta Cortex · Fonte da Verdade (doc-mestre)` |
 | Diário do Pitágoras | existe fora da pasta canônica: `DIARIO_SEO_PITAGORAS` v1.3 (2026-11-02), em `00_CONECTA CAPTAÇÃO E CONTEÚDO › 05_SEO`, com 106 requisitos, todos ativos. **Não tem ID `SEO-xxx` nem campo de severidade** (tem requisito, fonte, data de descoberta, status, impacto) |
 | Gate | pronto e fechado: sem canônico válido, **todo PR de blog dá BLOCK** |
-| Testes | `python3 tools/gate_seo/test_gate.py`: 28 OK (19 da r1 + 9 do canônico no repo) |
-| PR #1 (`1f5c287`) | **BLOCK**: CANON-SEO-02, 03, 04, 05, 07, 08, 09, 10, mais 06 (manual pendente). Não foi mergeado. Detalhe abaixo |
+| Testes | `python3 tools/gate_seo/test_gate.py`: 33 OK (19 da r1 + 9 da r2 + 5 da v1.1.0) |
+| PR #1 (`ec01233`, r3) | **BLOCK**: CANON-SEO-07 e CANON-SEO-08 (capas placeholder sem FR-001). CANON-SEO-04 é aviso. Não foi mergeado. Detalhe abaixo |
 
 ## Canônico no repo: `docs/CANONICO_SEO.md` (r2)
 
@@ -37,7 +37,37 @@ Repositório próprio do Grok/Ara no Conecta Cortex. Escrita livre. Leitura do C
     - §8: as 4 proporções 9:16, 1:1, 4:5 e 16:9, e nenhuma imagem placeholder.
   - **Atestado manual por commit** (`docs/seo-canonico/avaliacoes/PR<n>-<commit>.json`, com `veredito` ok, violado ou pendente, mais o motivo).
   - Uma falha automática ou um veredito "violado" viola o ID. Sem atestado "ok" do mesmo commit, o ID fica em manual pendente, que também bloqueia.
-- **§6 (Lighthouse).** O Lighthouse não está instalado; instalar espera o sim do Wagner. Até lá, CANON-SEO-06 é sempre "verificação manual pendente" e bloqueia.
+- **§6 (Lighthouse).** Na r2, o Lighthouse não estava instalado e o §6 bloqueava. Na r3 ele foi instalado (t71u); ver abaixo.
+
+## Canônico v1.1.0 (r3, 2026-11-02, t71u)
+
+O Wagner autorizou explicitamente relaxar §2, §3, §4, §5, §6, §7, §8 e §10 (t71u). §1, §9 e §11 não mudaram. O gate passou a ler o sha256 `00f85be0…9ab8`. Mudanças no gate:
+
+- **Severidade por seção** no meta (`severidade_por_secao`). CANON-SEO-04 passou a `aviso`. Seção `aviso` com falha automática aparece em `AVISO …` na saída e na coluna Resultado do README, sem bloquear.
+- **§3:** o texto de bio marcado como afirmação do autor (classe `about-author`/`author-bio` ou `data-fonte="Declaração do próprio …"`) fica fora da varredura de citação. Continua dentro da varredura de embalagem (§1).
+- **§5:** os links Giro e LinkedIn são obrigatórios na bio do artigo **ou** na página do autor linkada com `rel="author"`. Aceita foto real ou avatar.
+- **§6:** lê o baseline `artifacts/lighthouse/*.json` do blog (`tools/lighthouse/run.mjs`, Lighthouse 13.6.0). Só vale um baseline cujo HTML/assets/config seja idêntico ao do HEAD (`git diff`). Passa com LCP ≤ 2,5 s, CLS ≤ 0,1, Perf ≥ 90 e SEO ≥ 90 sem `is-crawlable`, auditoria que reprova só pelo `noindex` deliberado. O TBT é o proxy de lab para o INP.
+- **§7:** a versão do FR não trava. Os campos IPTC (TransmissionReference=FR-001, autor, Giro, ID criativo) e a largura ≥ 1080 continuam obrigatórios.
+- **§8:** regra dura = todo asset do Article com metadado FR-001 e nenhum placeholder. As proporções viraram informativas.
+- **§10:** a única etapa bloqueante é a aprovação do Wagner, em `docs/seo-canonico/aprovacoes/PR<n>.json` (`por`, `data`, `ref`, `commit`), passada ao gate com `--aprovacao`. Sem registro para o HEAD, o §10 falha.
+
+### PR #1 contra o canônico v1.1.0 (commit `ec01233`, 2026-11-02)
+
+| ID | Veredito | Motivo |
+|---|---|---|
+| CANON-SEO-01 | ok | nada de grupo Disal, mediana, embutido com número ou Arquimedes, inclusive na bio e na página do autor |
+| CANON-SEO-02 | ok | é post de formato/educação ("Como funciona…") e abre com contexto, como a v1.1.0 permite |
+| CANON-SEO-03 | ok | não há "A CONFERIR" nem "Fonte: Google". A bio está marcada como declaração do Wagner. Alertas de compliance: "5 estrelas no Google", "8 primeiras parcelas", "melhor do Brasil por 6 anos", "mais de 500" |
+| CANON-SEO-04 | aviso | o slug `artigo-exemplo` não tem ID de criativo; não bloqueia |
+| CANON-SEO-05 | ok | Giro e LinkedIn estão na página do autor (rel=author, linkada da bio) e no sameAs; foto real |
+| CANON-SEO-06 | ok | Lighthouse 13.6.0, desktop, 3 páginas: Perf 100, LCP 0,24 s, CLS 0, TBT 0 ms, SEO 100 sem is-crawlable (bruto 66/69 por causa do noindex) |
+| CANON-SEO-07 | **violado** | as 3 capas placeholder não têm IPTC com autor, Giro, ID criativo nem FR-001 |
+| CANON-SEO-08 | **violado** | as 3 capas são placeholder e não passaram pelo FR-001 |
+| CANON-SEO-09 | ok (interpretação) | a §9 rege as notícias (60/40); o post é educativo, tipo que a §2 v1.1.0 reconhece. O Wagner deve confirmar |
+| CANON-SEO-10 | ok | aprovação do Wagner registrada (t71u, 2026-11-02, `ec01233`); check.py com 0 falhas; Lighthouse OK |
+| CANON-SEO-11 | ok | seção de referência |
+
+O `tools/check.py` do blog tem 427 OK, 0 falhas e 4 avisos. Com `--lighthouse`, são 428 OK. Para destravar, o Midas precisa entregar as capas finais com FR-001 (IPTC completo, ID `BLOG-AAAAMMDD-…`).
 
 ### PR #1 contra o canônico v1.0.0 (commit `1f5c287`, 2026-11-02)
 
@@ -62,7 +92,8 @@ Repositório próprio do Grok/Ara no Conecta Cortex. Escrita livre. Leitura do C
 ```
 # antes de abrir/mergear PR de blog (alvo = worktree do PR, com o HTML gerado)
 python3 tools/gate_seo/gate.py --alvo ../cg-blog --base origin/main --pr 1 \
-    --atestado docs/seo-canonico/avaliacoes/PR1-1f5c287.json --registrar-readme README.md
+    --atestado docs/seo-canonico/avaliacoes/PR1-ec01233.json --aprovacao docs/seo-canonico/aprovacoes/PR1.json \
+    --registrar-readme README.md
 # exit 0 = PASS · exit 1 = BLOCK (lista os IDs) · exit 2 = erro de uso
 ```
 
@@ -101,12 +132,13 @@ Formato do requisito que o parser aceita: as duas grafias que o Google Docs expo
 ```
 tools/gate_seo/canonico.py      parser (ID / data / fonte / severidade / status / versão) + parse_secoes (## N. → CANON-SEO-NN)
 tools/gate_seo/canon_checks.py  checagens automáticas parciais das seções do docs/CANONICO_SEO.md
-docs/seo-canonico/canonico.meta.json   meta do canônico vigente (origem repo, sha256, aprovação t69u, derivação)
+docs/seo-canonico/canonico.meta.json   meta do canônico vigente (origem repo, sha256 v1.1.0, aprovações t69u/t71u, severidade por seção)
+docs/seo-canonico/aprovacoes/   aprovação do Wagner por PR e commit (§10)
 docs/seo-canonico/avaliacoes/   atestados manuais por PR e commit
 tools/gate_seo/gate.py          gate: PASS ou BLOCK + IDs; registra no README
 tools/gate_seo/snapshot.py      grava o .meta.json (drive_id, pasta, versão, sha256) do snapshot exportado
 tools/gate_seo/mapa_checks.json ID canônico → regras do tools/check.py do blog (vazio até existirem IDs)
-tools/gate_seo/test_gate.py     19 testes (parser + gate)
+tools/gate_seo/test_gate.py     33 testes (parser + gate + v1.1.0)
 docs/seo-canonico/candidato-DIARIO_SEO_PITAGORAS-v1.3.md (+ .meta.json)
                                 snapshot do diário v1.3 (Drive 1BrYkzsmedHKHg8mp6mVPiJCK2Bkbzl--lPNXBY3sRVw,
                                 modificado 2026-11-02 12:18 America/Bahia). NÃO é o canônico: está fora da pasta e sem IDs
@@ -117,8 +149,8 @@ docs/seo-canonico/candidato-DIARIO_SEO_PITAGORAS-v1.3.md (+ .meta.json)
 - Publicar o canônico em `00_CONECTA CORTEX › 01_FONTE DA VERDADE`, com ID `SEO-xxx`, data, fonte, **severidade** e status em cada requisito.
 - Dizer quais requisitos são bloqueantes. O gate não infere severidade: nada é inventado.
 - (r2) O canônico vigente é o `docs/CANONICO_SEO.md` do repo. Se o Pitágoras publicar uma versão no Drive com `SEO-xxx` e severidade, ela substitui a derivação `CANON-SEO-NN`.
-- (r2) **Lighthouse** para CANON-SEO-06: instalar espera o sim do Wagner. Sem ele, todo PR de blog fica bloqueado nessa seção.
-- (r2) O conteúdo do PR #1 ainda viola CANON-SEO-02, 03, 04, 05, 07, 08, 09 e 10. Corrigir é decisão de conteúdo (Pitágoras, Midas e Wagner); o gate não altera o blog.
+- (r3) Lighthouse instalado no blog (t71u). O CANON-SEO-06 passa.
+- (r3) O PR #1 ainda viola CANON-SEO-07 e 08: faltam as capas finais do Midas com FR-001. A §9 foi atestada ok por interpretação, e o Wagner deve confirmar.
 
 ## Validação SEO por PR
 
