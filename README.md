@@ -159,5 +159,6 @@ docs/seo-canonico/candidato-DIARIO_SEO_PITAGORAS-v1.3.md (+ .meta.json)
 | 2026-11-02 12:52 | #1 blog-stripe-clone | `4f51fda` | sem versão · `ausente` · `—` | BLOCK: GATE-CANON-AUSENTE |
 | 2026-11-02 12:52 | oportunidades (staged em cg-op, sem PR) | `4f51fda` | sem versão · `ausente` · `—` | BLOCK: GATE-CANON-AUSENTE |
 | 2026-11-02 20:35 | #1 blog-stripe-clone | `1f5c287` | 1.0.0 · `docs/CANONICO_SEO.md` · `a6e41dd49822bdd453b5195452dc37b9202d57a54579646ae574302cfdbb1dca` | BLOCK: CANON-SEO-02, CANON-SEO-03, CANON-SEO-04, CANON-SEO-05, CANON-SEO-07, CANON-SEO-08, CANON-SEO-09, CANON-SEO-10, CANON-SEO-06 (manual pendente) |
+| 2026-11-02 21:05 | #1 blog-stripe-clone | `ec01233` | 1.1.0 · `docs/CANONICO_SEO.md` · `00f85be0162fa0cea5cfc18d92553e5a16120b8f654c580083db6bdd739f9ab8` | BLOCK: CANON-SEO-07, CANON-SEO-08 · avisos (não bloqueiam): CANON-SEO-04 |
 
 Diagnóstico das mesmas duas leituras contra o candidato `DIARIO_SEO_PITAGORAS` v1.3 (sha256 `2357f75bcd7d`). Também dá BLOCK, com `GATE-CANON-FORA-DA-PASTA`, `GATE-CANON-SEM-ID` (106/106) e `GATE-CANON-SEM-SEVERIDADE` (106/106). O `tools/check.py` dos dois alvos tem 0 FALHAS.
