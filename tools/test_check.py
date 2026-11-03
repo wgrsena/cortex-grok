@@ -43,7 +43,7 @@ class TestCheck(unittest.TestCase):
         for nome, (de, para, regra, *arq) in MUTACOES.items():
             with self.subTest(nome), tempfile.TemporaryDirectory() as tmp:
                 raiz = Path(tmp) / "site"
-                shutil.copytree(ROOT, raiz, ignore=shutil.ignore_patterns(".git"))
+                shutil.copytree(ROOT, raiz, ignore=shutil.ignore_patterns(".git", "node_modules"))
                 f = raiz / (arq[0] if arq else ART)
                 t = f.read_text(encoding="utf-8")
                 self.assertIn(de, t)

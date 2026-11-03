@@ -7,6 +7,7 @@ Regras numeradas como no checklist do README (R1–R12) + regras do lab (L1–L7
 import json
 import re
 import struct
+import subprocess
 import sys
 import zlib
 from html.parser import HTMLParser
@@ -317,9 +318,17 @@ def main():
     for n in gerar_sitemap.desatualizados(ROOT):
         r.ok(False, "L7", f"{n} desatualizado em relação aos posts/config — rode python3 tools/sitemap/gerar_sitemap.py")
     r.ok(CFG["whatsapp_oficial"] != CFG["whatsapp_placeholder"], "PEND", "número oficial do WhatsApp ainda é placeholder (config/site.json)", aviso=True)
-    paginas = sorted(p for p in ROOT.rglob("*.html") if ".git" not in p.parts)
+    paginas = sorted(p for p in ROOT.rglob("*.html") if not {".git", "node_modules"} & set(p.relative_to(ROOT).parts))
     for p in paginas:
         checar_pagina(p, r, sitemap_urls)
+    # CWV (§6 do canônico): Lighthouse headless, só com --lighthouse (precisa de tools/lighthouse/node_modules)
+    if "--lighthouse" in sys.argv:
+        lh = ROOT / "tools" / "lighthouse"
+        if not (lh / "node_modules" / "lighthouse").exists():
+            r.ok(False, "CWV", "Lighthouse não instalado: rode `npm install` em tools/lighthouse/")
+        else:
+            p = subprocess.run(["node", str(lh / "run.mjs")], cwd=ROOT, capture_output=True, text=True)
+            r.ok(p.returncode == 0, "CWV", "Lighthouse: limite do §6 (LCP ≤2,5 s, CLS ≤0,1, Performance e SEO ≥90) falhou — ver artifacts/lighthouse/\n" + p.stdout[-2000:] + p.stderr[-2000:])
     print(f"Páginas: {len(paginas)} · checagens OK: {r.oks} · FALHAS: {len(r.falhas)} · avisos: {len(r.avisos)}")
     for f in r.falhas:
         print("FALHA", f)

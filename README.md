@@ -9,13 +9,14 @@ Repositório próprio do Grok/Ara no Conecta Cortex. Escrita livre. Leitura do C
 > Documento vivo. Atualizar a cada mudança de estado.
 > **Sem deploy.** Nada aqui foi publicado. Código para revisão do Wagner.
 
-## Estado (2026-11-02, r3, America/Bahia)
+## Estado (2026-11-02, r6, America/Bahia)
 
 | Item | Estado |
 |---|---|
 | Layout (hero, destaque, lista, rodapé com CTA) | pronto |
 | Requisitos do checklist (12) | 11 feitos, 1 parcial (R8: capas ainda placeholder) |
-| `tools/check.py` | passa: 321 checagens OK, 0 falhas, 4 avisos (3 capas placeholder + WhatsApp). r3: 307 OK; antes da r2: 292 OK, 0 falhas, 7 avisos |
+| `tools/check.py` | passa: 427 checagens OK, 0 falhas, 4 avisos (3 capas placeholder + WhatsApp); com `--lighthouse`, 428 OK. r5: 321 OK; r3: 307 OK |
+| Lighthouse (§6 do canônico) | passa nas 3 páginas: Perf 100, LCP 0,24 s, CLS 0, SEO 100 sem `is-crawlable` (noindex deliberado). Baseline em `artifacts/lighthouse/` |
 | `tools/test_check.py` | passa: 2 testes OK (base passa + 10 mutações proibidas, todas pegas) |
 | `tools/sitemap/test_gerar_sitemap.py` | passa: 10 testes OK |
 | Indexação | todas as páginas com `noindex` e sitemap vazio, até o Wagner aprovar |
@@ -38,6 +39,8 @@ tools/gen_placeholders.py     gera os PNG placeholder com XMP DigitalSourceType 
 tools/set_whatsapp.py         aplica o número de config/site.json em todos os links wa.me
 tools/sitemap/gerar_sitemap.py  gera sitemap.xml e robots.txt a partir dos posts e do config (stdlib)
 tools/sitemap/test_gerar_sitemap.py  testes do gerador (unittest)
+tools/lighthouse/run.mjs      Lighthouse (dev, §6): mede as 3 páginas e grava artifacts/lighthouse/<data>-<commit>.{json,md}
+docs/CANONICO_SEO.md          canônico SEO v1.1.0 (lido pelo gate SEO)
 tools/gen_autor_fotos.py      gera as fotos do autor a partir dos originais do Drive (precisa de Pillow; só build local)
 ```
 
@@ -162,9 +165,20 @@ Toda página nova nasce com `<meta name="robots" content="noindex, max-image-pre
 
 ## Canônico SEO (`docs/CANONICO_SEO.md`)
 
-- **Arquivo canônico SEO no repo**: `docs/CANONICO_SEO.md`, v1.0.0 (2026-11-02, Pitágoras, aprovação Wagner Sena), sha256 `a6e41dd49822bdd453b5195452dc37b9202d57a54579646ae574302cfdbb1dca`. Gravado byte a byte como o Wagner mandou (t69u, 2026-11-02). Ele fica no repo porque a pasta `01_FONTE DA VERDADE` do Drive é só leitura para o conector.
+- **Arquivo canônico SEO no repo**: `docs/CANONICO_SEO.md`, **v1.1.0** (2026-11-02), sha256 `00f85be0162fa0cea5cfc18d92553e5a16120b8f654c580083db6bdd739f9ab8`. Ele fica no repo porque a pasta `01_FONTE DA VERDADE` do Drive é só leitura para o conector.
+  - v1.0.0 (sha256 `a6e41dd4…1dca`) foi gravada byte a byte como o Wagner mandou (t69u).
+  - v1.1.0 relaxa §2, §3, §4, §5, §6, §7, §8 e §10 por autorização explícita do Wagner (t71u, 2026-11-02). §1, §9 e §11 não mudaram. Seguem duras a embalagem (§1), a citação (§3, mas a bio vale como declaração do autor) e "todo asset passa FR-001 antes de publicar" (§8). Diff em `/workspace/canonico-v110.diff`.
 - **`tools/check.py` não lê canônico.** Ele não lê nenhum arquivo canônico, então não houve path para ajustar. Quem lê o `docs/CANONICO_SEO.md` é o gate SEO (`tools/gate_seo/`, PR #5), que valida todo merge do blog contra as seções CANON-SEO-01…11.
 - O conteúdo do blog não foi alterado neste commit. O `noindex` continua, e nada foi para deploy.
+
+## Lighthouse (§6, r6, 02/11/2026, t71u)
+
+- **Dependência de dev** (autorizada pelo Wagner em t71u): `lighthouse` 13.6.0 em `tools/lighthouse/package.json`. `node_modules/` fica fora do git. Instalar: `cd tools/lighthouse && npm install`.
+- **Rodar:** `python3 tools/check.py --lighthouse` ou `node tools/lighthouse/run.mjs`. Serve o repo com `python3 -m http.server` em 127.0.0.1, usa o Chrome headless em `/usr/bin/google-chrome` com o preset desktop e mede home, artigo-exemplo e página do autor.
+- **Saída:** `artifacts/lighthouse/<data>-<commit>.json` e `.md`. O §6 passa com LCP ≤ 2,5 s, CLS ≤ 0,1, Performance ≥ 90 e SEO ≥ 90.
+  - O SEO aparece bruto e sem a auditoria `is-crawlable`, que reprova só por causa do `noindex` deliberado.
+  - O INP é métrica de campo. No laboratório, o proxy é o TBT, com aviso acima de 200 ms.
+  - Se o Lighthouse não estiver instalado, `--lighthouse` dá FALHA [CWV] e o §6 fica pendente.
 
 ## Sitemap e robots (r4, 02/11/2026, t70u)
 
@@ -186,4 +200,5 @@ Toda página nova nasce com `<meta name="robots" content="noindex, max-image-pre
 - r2 (01/11/2026): autor real, FR-001 definitivo, bloco E-E-A-T. Diff para revisão em `/workspace/blog-stripe-clone-r2.diff`.
 - r3 (02/11/2026): canônico SEO v1.0.0 em `docs/CANONICO_SEO.md`. Diff em `/workspace/canonico-seo.diff`.
 - r4 (02/11/2026): robots.txt com crawlers de IA + sitemap.xml gerado. Diff em `/workspace/robots-sitemap.diff`.
+- r6 (02/11/2026, t71u): canônico SEO v1.1.0 + Lighthouse 13.6.0 (`tools/lighthouse/`, `check.py --lighthouse`) + baseline em `artifacts/lighthouse/`. Diff do canônico em `/workspace/canonico-v110.diff`.
 - r5 (02/11/2026): merge de `blog-stripe-clone-autor` (página do autor, 3 fotos aprovadas, bio nova, sameAs LinkedIn + Giro, regras L1/L7; branch local do Midas/Grok a partir de 4f51fda).
