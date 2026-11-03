@@ -1,0 +1,12 @@
+__pycache__/
+.pytest_cache/
+.venv/
+backtest_saida/
+dados/
+*.xlsx
+.env
+.env.*
+node_modules/
+.DS_Store
+supabase/.temp/
+fato/

@@ -1,0 +1,9 @@
+# Revisão Cortex Reviewer (I3): a imagem do serviço leva só código de produção.
+# O Dockerfile faz `COPY *.py ./`; estes arquivos são oráculo/fixtures de teste e documentação.
+test_*.py
+forca_bruta.py
+util_teste.py
+dados_sinteticos.py
+*.md
+__pycache__/
+.pytest_cache/
