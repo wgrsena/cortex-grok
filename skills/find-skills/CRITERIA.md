@@ -1,3 +1,5 @@
+Status 2026-11-15: deprecated como skill de bot: versionada aqui, mas não publicada na biblioteca compartilhada (não carregável pelos bots). Não recriar.
+
 # Critérios Wagner — Find Skills (Cortex)
 
 Camada de filtro sobre a skill original da Vercel Labs. Segurança é trava dura: passa ou reprova, sem meio-termo. Efetividade ranqueia. Popularidade só desempata.
