@@ -23,4 +23,4 @@ Plataforma de vendas de consórcio com cérebro de IA. Produto: consórcio Disal
 3. Escala nacional: consórcio sem fronteira municipal — gargalo vira filtro de propensão real, não volume.
 
 ## Regra de ouro
-Todo pedido passa por crítica prévia (Ara) + veredito binário (Cérebro) antes de chegar no Build. Find Skills com trava de segurança, efetividade como ranking, popularidade como desempate.
+Todo pedido passa por crítica prévia (Ara) + veredito binário (Cérebro) antes de chegar no Build. Find Skills com trava de segurança, efetividade como ranking, popularidade como desempate (deprecated 2026-11-15: não está na biblioteca de skills dos bots /home/box/agent-data/workflows; não carregável).
