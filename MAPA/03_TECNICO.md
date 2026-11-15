@@ -1,8 +1,8 @@
 # Camada 3 — Técnica
 
 ## Repos
-- wgrsena/CONECTACORTEX: Claude e Codex (branches claude/…, codex/…). Grok só leitura. Skills: constraint-driven-development, mcp-builder, vercel-composition-patterns, vercel-react-best-practices, find-skills. Docs: SKILLS.md (pedido 14/11 — find-skills com critério funcionalidade/segurança, tasks 2026-11-14 skills script primeiro). PRs: 17 (coletor Clique Vendas v3, fechado), 18 (casca HighLevel v3, aberto), 22 (entrada sem message ID, fechado).
-- wgrsena/cortex-grok: repo do Grok, escrita livre. README + skills/find-skills (SKILL.md + CRITERIA.md, commit a4f0330). MAPA/ com os 3 índices.
+- wgrsena/CONECTACORTEX: Claude e Codex (branches claude/…, codex/…). Grok só leitura. Skills: constraint-driven-development, mcp-builder, vercel-composition-patterns, vercel-react-best-practices, find-skills (deprecated 2026-11-15: não está na biblioteca de skills dos bots /home/box/agent-data/workflows; não carregável). Docs: SKILLS.md (pedido 14/11 — find-skills com critério funcionalidade/segurança, tasks 2026-11-14 skills script primeiro). PRs: 17 (coletor Clique Vendas v3, fechado), 18 (casca HighLevel v3, aberto), 22 (entrada sem message ID, fechado).
+- wgrsena/cortex-grok: repo do Grok, escrita livre. README + skills/find-skills (SKILL.md + CRITERIA.md, commit a4f0330) (deprecated 2026-11-15: não está na biblioteca de skills dos bots /home/box/agent-data/workflows; não carregável). MAPA/ com os 3 índices.
 
 ## Drive (00_CONECTA CORTEX)
 - 01_FONTE DA VERDADE: só leitura, matriz A/B é fonte da verdade.
