@@ -36,10 +36,10 @@
 2. Cérebro dá veredito binário.
 3. Build só recebe com veredito aprovado anexado.
 
-## Find Skills
+## Find Skills (deprecated 2026-11-15: não está na biblioteca de skills dos bots /home/box/agent-data/workflows; não carregável)
 - Versionado no cortex-grok: SKILL.md (Vercel Labs) + CRITERIA.md (segurança trava dura, efetividade ranking, popularidade desempate).
 - Cópia também no CONECTACORTEX (leitura Grok, sem escrita) em agents/skills e claude/skills.
-- Auditoria: 4 skills passaram na trava. grokbot-skills mais alinhado (idempotência, circuit breaker, fonte obrigatória). new-skill-builder clona sem quarentena — trava antes do clone.
+- Auditoria: 4 skills passaram na trava. grokbot-skills (deprecated 2026-11-15: não está na biblioteca de skills dos bots /home/box/agent-data/workflows; não carregável) mais alinhado (idempotência, circuit breaker, fonte obrigatória). new-skill-builder (deprecated 2026-11-15: não está na biblioteca de skills dos bots /home/box/agent-data/workflows; não carregável) clona sem quarentena — trava antes do clone.
 
 ## Pendências operacionais
 - HIGHLEVEL_TOKEN no ambiente (PR 18).
