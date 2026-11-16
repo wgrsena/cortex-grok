@@ -8,38 +8,43 @@ description: >-
 ---
 # Orquestrador: digest diário
 
-Regra dura: só propõe. Nunca envia mensagem a bot, cria ou move issue, altera descrição, rotina ou skill. A saída é uma fila para o dono decidir.
-Regra anti-ruído: todo item da fila cita a fonte (arquivo da auditoria + linha/bot, id ou URL da issue no Linear, id de mensagem). Sem fonte, `unknown`. Não estime.
+Regra dura: só propõe. Nunca envia mensagem a bot, cria, comenta ou move issue, altera descrição, rotina ou skill. O único envio permitido é o próprio digest, no destino que a rotina nomear. A saída é uma fila para o dono decidir.
+Regra anti-ruído: todo dado cita a fonte (arquivo da auditoria, id/URL da issue no Linear, commit, id de mensagem). Sem fonte, `unknown`. Não estime, não complete números de memória nem do pedido de alguém: o arquivo da auditoria manda.
 
 ## 1. Auditoria mais recente
-- Localize a auditoria mais recente feita com `auditing-a-bot-at-30-days` / `bot-lifecycle-decision` (arquivo versionado no repositório de skills/bots do dono ou no box). Use a data no nome ou no conteúdo; registre caminho e data.
-- Por bot extraia: nome, id, score (Quiet/Noisy/Very noisy), taxa, total de mensagens, status (ativo/inativo), veredito de calibração.
-- Bots marcados como inativos ficam fora da fila (só listados em `Ignorados`).
+- Localize a auditoria mais recente feita com `auditing-a-bot-at-30-days` / `bot-lifecycle-decision` (o caminho vem da rotina; senão, procure no repositório de skills/bots do dono e no box). Registre caminho e data.
+- Por bot extraia: nome, score (Quiet/Noisy/Very noisy) com taxa, decisão, motivo de desalinhamento e status (ativo/inativo). Bot com `[INATIVO]` no nome ou marcado como desligado vai para `Ignorados`.
+- Alinhamento: `desalinhado` se a auditoria apontou descrição ≠ comportamento; se houver commit de descrição nova do bot depois da data da auditoria, escreva `refatorado em <data> (<sha curto>)`; sem dado, `unknown`.
 - Se a auditoria tiver mais de 35 dias, avise no topo: `auditoria vencida`.
+- Conte os scores a partir do arquivo e mostre o total por score.
 
 ## 2. Pendências abertas no Linear
-- Use o connector Linear (se pedir sign-in, peça ao dono pelo fluxo de autenticação; não use navegador). Liste issues não concluídas (estados não Done/Canceled), com: id, título, responsável/label do bot, estado, data de atualização, URL.
-- Associe issue a bot por responsável, label ou nome do bot no título. Sem associação clara, vai para `Sem dono`.
+- Use o connector Linear (se pedir sign-in, avise o dono; não use navegador). Liste issues do time indicado com estado não concluído/cancelado: id, título, responsável, labels, estado, última atualização, URL.
+- Associe issue a bot por responsável, label ou nome do bot no título/descrição. Sem associação clara, vai para `Sem dono`.
 
 ## 3. Sinal de atividade
-- Para cada bot com pendência, verifique a última atividade real (ReadTranscript/SearchTranscripts do bot, último commit ou última mensagem enviada). Registre data e fonte.
+- Só para bot com pendência associada: última atividade real (transcrição do bot, último commit ou última mensagem). Data e fonte, ou `unknown`.
 
 ## 4. Fila: quem deveria estar trabalhando e não está
-Entra na fila o bot ativo que tem ≥1 pendência aberta associada E nenhuma atividade nas últimas 48h (ou issue sem atualização há >7 dias).
-Ordene por:
-1. Segurança: pendência que envolve dado pessoal, chave/segredo ou ação jurídica vem primeiro (trava dura).
-2. Efetividade: score Quiet antes de Noisy antes de Very noisy (bot que entrega com pedido é o melhor candidato a retomar).
-3. Desempate: issue mais antiga sem atualização.
-Bot Very noisy com pendência: não sugerir retomar; sugerir revisar escopo (aponta `bot-lifecycle-decision`).
+Entra o bot ativo com ≥1 pendência associada E sem atividade nas últimas 48h (ou issue sem atualização há >7 dias).
+Ordem: 1) segurança (dado pessoal, chave/segredo, ação jurídica) primeiro; 2) efetividade: Quiet, depois Noisy, depois Very noisy; 3) desempate: issue mais antiga sem atualização.
+Bot Very noisy com pendência: não sugerir retomar; sugerir revisar escopo (`bot-lifecycle-decision`).
 
-## 5. Saída (português, sintético)
+## 5. Saída (português, sintético, formatada para chat)
 ```
-Digest <data> (<fuso>) | Auditoria: <caminho> de <data> [vencida?]
-Fila:
-1. <bot> — <issue id + título> (<URL>) — parado desde <data> (<fonte>) — score <x> — proposta: <uma frase>
+Digest <data> (<fuso>) — só propostas, nada foi executado
+Auditoria: <caminho> de <data> [vencida?] | <n> Quiet, <n> Noisy, <n> Very noisy
+Linear (<time>): <n> issues abertas, <n> ligadas a bot
+
+Fila (quem deveria estar trabalhando e não está):
+1. <bot> — <issue> (<URL>) — parado desde <data> (<fonte>) — <score> — proposta: <uma frase>
+(ou: fila vazia)
+
+Painel por bot:
+<bot> — <score taxa> — <alinhamento> — pendência: <issue ou "nenhuma">
 ...
-Sem dono: <issues sem bot associado>
-Ignorados: <bots inativos com pendência>
+Sem dono: <issues sem bot>
+Ignorados: <bots inativos>
 Unknowns: <o que não deu pra verificar>
 ```
-Se a fila estiver vazia, diga `fila vazia` em uma linha. Termine sem executar nenhuma proposta; o dono aprova item a item.
+Termine sem executar nenhuma proposta; o dono aprova item a item.
