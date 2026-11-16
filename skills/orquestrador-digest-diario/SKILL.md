@@ -27,7 +27,7 @@ Regra anti-ruído: todo dado cita a fonte (arquivo da auditoria, id/URL da issue
 
 ## 3b. Os Quatro (Drive, só leitura)
 - O ciclo é Sócrates → Tácito → Tales (Tales também faz o confronto com o portfólio e grava na Fila de Prioridade; Narciso está inativo desde 15/11/2026). O gatilho único do ciclo é a automação externa `os-quatro-ciclo-diario` (07:00 America/Bahia); não proponha nem crie outro gatilho.
-- Com o connector do Google Drive, abra a pasta `Os Quatro` e, para Sócrates, Tácito, Tales, diário de rejeições e Fila de Prioridade, pegue o arquivo mais recente: nome, data de modificação (converta para o fuso do dono) e link. Atribua arquivo a bot pelo nome do arquivo ou pelo último editor; se não der para atribuir, `unknown`.
+- Com o connector do Google Drive, liste a pasta `Os Quatro`. Formato real (conferido em 16/11/2026): um diário único por dia, `os_quatro_<AAAA-MM-DD>_diario.md`, com seções `## <Bot> — ...`, e `os_quatro_fila_prioridade.md`, que pode ter várias cópias (use a de modificação mais recente). Para cada bot (Sócrates, Tácito, Tales), a última data é a do diário mais recente que tem uma seção `## <Bot>` (leia até os 5 diários mais recentes); para a Fila de Prioridade, a modificação da cópia mais recente. Converta para o fuso do dono e dê o link. Sem seção do bot nos diários lidos, `unknown`.
 - `ciclo parado`: bot de Os Quatro sem arquivo novo há mais de 48h. Entra na Fila (seção 4) com proposta de uma frase (ex.: conferir se a automação das 07:00 rodou). Fim de semana conta no relógio, mas diga se o intervalo cobre sábado/domingo.
 - Pasta não encontrada ou Drive sem acesso: escreva o bloqueio em `Unknowns`; não invente data.
 
