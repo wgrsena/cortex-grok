@@ -3,8 +3,8 @@ name: orquestrador-digest-diario
 description: >-
   Use uma vez por dia (ou quando pedirem o digest do orquestrador) para cruzar
   os scores da auditoria de 30 dias mais recente com as pendências abertas no
-  Linear e propor a fila de quem deveria estar trabalhando e não está. Só
-  propõe; nunca executa.
+  Linear e o estado de Os Quatro no Drive e propor a fila de quem deveria estar
+  trabalhando e não está. Só propõe; nunca executa.
 ---
 # Orquestrador: digest diário
 
@@ -25,8 +25,14 @@ Regra anti-ruído: todo dado cita a fonte (arquivo da auditoria, id/URL da issue
 ## 3. Sinal de atividade
 - Só para bot com pendência associada: última atividade real (transcrição do bot, último commit ou última mensagem). Data e fonte, ou `unknown`.
 
+## 3b. Os Quatro (Drive, só leitura)
+- O ciclo é Sócrates → Tácito → Tales (Tales também faz o confronto com o portfólio e grava na Fila de Prioridade; Narciso está inativo desde 15/11/2026). O gatilho único do ciclo é a automação externa `os-quatro-ciclo-diario` (07:00 America/Bahia); não proponha nem crie outro gatilho.
+- Com o connector do Google Drive, abra a pasta `Os Quatro` e, para Sócrates, Tácito, Tales, diário de rejeições e Fila de Prioridade, pegue o arquivo mais recente: nome, data de modificação (converta para o fuso do dono) e link. Atribua arquivo a bot pelo nome do arquivo ou pelo último editor; se não der para atribuir, `unknown`.
+- `ciclo parado`: bot de Os Quatro sem arquivo novo há mais de 48h. Entra na Fila (seção 4) com proposta de uma frase (ex.: conferir se a automação das 07:00 rodou). Fim de semana conta no relógio, mas diga se o intervalo cobre sábado/domingo.
+- Pasta não encontrada ou Drive sem acesso: escreva o bloqueio em `Unknowns`; não invente data.
+
 ## 4. Fila: quem deveria estar trabalhando e não está
-Entra o bot ativo com ≥1 pendência associada E sem atividade nas últimas 48h (ou issue sem atualização há >7 dias).
+Entra o bot ativo com ≥1 pendência associada E sem atividade nas últimas 48h (ou issue sem atualização há >7 dias), e todo bot de Os Quatro marcado `ciclo parado` na seção 3b.
 Ordem: 1) segurança (dado pessoal, chave/segredo, ação jurídica) primeiro; 2) efetividade: Quiet, depois Noisy, depois Very noisy; 3) desempate: issue mais antiga sem atualização.
 Bot Very noisy com pendência: não sugerir retomar; sugerir revisar escopo (`bot-lifecycle-decision`).
 
@@ -43,6 +49,7 @@ Fila (quem deveria estar trabalhando e não está):
 Painel por bot:
 <bot> — <score taxa> — <alinhamento> — pendência: <issue ou "nenhuma">
 ...
+Os Quatro: Sócrates <data> | Tácito <data> | Tales <data> | Fila de Prioridade <data> — <ok ou "ciclo parado: bot(s)">
 Sem dono: <issues sem bot>
 Ignorados: <bots inativos>
 Unknowns: <o que não deu pra verificar>
