@@ -1,0 +1,37 @@
+# Secrets e credenciais
+.env
+.env.*
+*.pem
+*.key
+credentials.json
+token.json
+
+# Dependências e build
+node_modules/
+dist/
+build/
+.next/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# SO e IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs e temporários
+*.log
+tmp/
+temp/
+*.tmp
+
+# Artefatos de teste
+coverage/
+.nyc_output/
+playwright-report/
+test-results/
