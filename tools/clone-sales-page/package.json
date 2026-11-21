@@ -1,0 +1,25 @@
+{
+  "name": "clone-sales-page",
+  "version": "1.0.0",
+  "description": "Two-stage sales page cloner using Firecrawl + Playwright",
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "clone": "tsx index.ts"
+  },
+  "keywords": [
+    "sales-page",
+    "cloner",
+    "firecrawl",
+    "playwright"
+  ],
+  "author": "Wagner Sena",
+  "license": "MIT",
+  "dependencies": {
+    "playwright": "1.48.2",
+    "tsx": "4.19.2"
+  },
+  "devDependencies": {
+    "@types/node": "22.9.3"
+  }
+}
