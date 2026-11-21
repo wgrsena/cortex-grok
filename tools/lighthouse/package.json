@@ -1,0 +1,8 @@
+{
+  "name": "cortex-blog-lighthouse",
+  "private": true,
+  "description": "Auditoria Lighthouse headless do blog (§6 do docs/CANONICO_SEO.md). Instalação autorizada pelo Wagner (t71u, 2026-11-02).",
+  "type": "module",
+  "scripts": { "audit": "node run.mjs" },
+  "devDependencies": { "lighthouse": "13.6.0" }
+}

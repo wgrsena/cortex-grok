@@ -1,0 +1,109 @@
+{
+  "data_america_bahia": "2026-11-02T21:03:41",
+  "commit": "498f5f9",
+  "html_com_mudanca_nao_commitada": false,
+  "lighthouse": "13.6.0",
+  "chrome": "Google Chrome 156.0.8078.47",
+  "preset": "desktop",
+  "servidor": "python3 -m http.server (local)",
+  "limites": {
+    "lcp_ms": 2500,
+    "cls": 0.1,
+    "tbt_ms": 200,
+    "performance": 90,
+    "seo": 90
+  },
+  "canonico": "docs/CANONICO_SEO.md §6",
+  "resultado": "OK",
+  "paginas": [
+    {
+      "pagina": "home (hero + destaque + lista)",
+      "path": "/",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best_practices": 96,
+        "seo": 66,
+        "seo_sem_is_crawlable": 100
+      },
+      "is_crawlable": {
+        "score": 0,
+        "motivo": "noindex deliberado até aprovação do Wagner (não é violação)"
+      },
+      "metricas": {
+        "lcp_ms": 241,
+        "cls": 0,
+        "tbt_ms": 0,
+        "ttfb_ms": 3,
+        "fcp_ms": 201,
+        "inp": "não mensurável em lab (sem interação); proxy = TBT"
+      },
+      "bp_falhas": [
+        "errors-in-console"
+      ],
+      "seo_falhas": [
+        "is-crawlable"
+      ],
+      "falhas": [],
+      "avisos": []
+    },
+    {
+      "pagina": "artigo em destaque / artigo individual (artigo-exemplo)",
+      "path": "/artigo-exemplo/",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best_practices": 100,
+        "seo": 69,
+        "seo_sem_is_crawlable": 100
+      },
+      "is_crawlable": {
+        "score": 0,
+        "motivo": "noindex deliberado até aprovação do Wagner (não é violação)"
+      },
+      "metricas": {
+        "lcp_ms": 241,
+        "cls": 0,
+        "tbt_ms": 0,
+        "ttfb_ms": 1,
+        "fcp_ms": 202,
+        "inp": "não mensurável em lab (sem interação); proxy = TBT"
+      },
+      "bp_falhas": [],
+      "seo_falhas": [
+        "is-crawlable"
+      ],
+      "falhas": [],
+      "avisos": []
+    },
+    {
+      "pagina": "página do autor",
+      "path": "/autor/wagner-sena/",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best_practices": 100,
+        "seo": 69,
+        "seo_sem_is_crawlable": 100
+      },
+      "is_crawlable": {
+        "score": 0,
+        "motivo": "noindex deliberado até aprovação do Wagner (não é violação)"
+      },
+      "metricas": {
+        "lcp_ms": 241,
+        "cls": 0,
+        "tbt_ms": 0,
+        "ttfb_ms": 1,
+        "fcp_ms": 202,
+        "inp": "não mensurável em lab (sem interação); proxy = TBT"
+      },
+      "bp_falhas": [],
+      "seo_falhas": [
+        "is-crawlable"
+      ],
+      "falhas": [],
+      "avisos": []
+    }
+  ]
+}
