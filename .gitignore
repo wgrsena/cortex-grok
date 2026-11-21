@@ -1,0 +1,24 @@
+# Environment variables - NEVER commit API keys or secrets
+.env
+.env.local
+.env.*.local
+
+# Node modules
+node_modules/
+
+# Output and temporary directories
+output/
+test-output/
+dist/
+build/
+
+# OS files
+.DS_Store
+Thumbs.db
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

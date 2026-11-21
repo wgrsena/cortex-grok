@@ -1,0 +1,35 @@
+# Environment variables (NEVER commit API keys)
+.env
+.env.local
+.env.*.local
+
+# Output directories
+output/
+test-output/
+*/output/
+
+# Node modules
+node_modules/
+package-lock.json
+
+# Playwright
+playwright-report/
+test-results/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Cloned content (do not commit copyrighted material)
+*.html
+*.htm
+!index.html
+assets/
+stage1-*/
+stage2-*/
