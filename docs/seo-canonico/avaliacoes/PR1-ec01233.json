@@ -1,0 +1,81 @@
+{
+  "_doc": "Avaliação manual por seção do docs/CANONICO_SEO.md v1.1.0 (sha256 00f85be0…9ab8) para o PR #1, commit ec01233 (blog-stripe-clone). veredito: ok | violado | pendente. Vale só para este commit.",
+  "_pr": 1,
+  "CANON-SEO-01": {
+    "revisor": "Cortex Build",
+    "data": "2026-11-02",
+    "commit": "ec01233",
+    "veredito": "ok",
+    "motivo": "Nada de grupo Disal, mediana, embutido com número ou Arquimedes, inclusive na bio nova e na página do autor. 'Disal' aparece só como nome da administradora representada."
+  },
+  "CANON-SEO-02": {
+    "revisor": "Cortex Build",
+    "data": "2026-11-02",
+    "commit": "ec01233",
+    "veredito": "ok",
+    "motivo": "O artigo-exemplo é post de formato/educação ('Como funciona o consórcio de veículos'). A v1.1.0 permite abrir com contexto, e a lede abre com contexto. Os números do corpo (Lei 11.795/2008, BCB) têm fonte, link e data de acesso."
+  },
+  "CANON-SEO-03": {
+    "revisor": "Cortex Build",
+    "data": "2026-11-02",
+    "commit": "ec01233",
+    "veredito": "ok",
+    "motivo": "Sem 'A CONFERIR' nem 'Fonte: Google'. Os números da lei têm fonte nomeada, link e acesso. A bio (artigo e /autor/wagner-sena/) vem marcada com data-fonte='Declaração do próprio Wagner Sena, enviada em 02/11/2026' e não é citação factual (v1.1.0). Alertas de compliance, não bloqueantes: '5 estrelas no Google', 'comissões bancam as 8 primeiras parcelas', 'equipe eleita a melhor do Brasil por 6 anos' e 'formou mais de 500' são afirmações do autor. O Wagner deve confirmar antes de indexar."
+  },
+  "CANON-SEO-04": {
+    "revisor": "Cortex Build",
+    "data": "2026-11-02",
+    "commit": "ec01233",
+    "veredito": "ok",
+    "motivo": "v1.1.0: slug sem ID de criativo é aviso. O slug 'artigo-exemplo' não tem ID; o gate reporta como aviso, e a meta continua."
+  },
+  "CANON-SEO-05": {
+    "revisor": "Cortex Build",
+    "data": "2026-11-02",
+    "commit": "ec01233",
+    "veredito": "ok",
+    "motivo": "O autor é Wagner Sena, com foto real aprovada. O link Giro (programagiroautomotivo.com.br/wagner) e o LinkedIn (linkedin.com/in/wgrsena) estão na página do autor, linkada da bio do artigo com rel=author, e no JSON-LD sameAs. A bio do artigo em si não tem os dois links diretos; o gate aceita a página do autor linkada da bio."
+  },
+  "CANON-SEO-06": {
+    "revisor": "Cortex Build",
+    "data": "2026-11-02",
+    "commit": "ec01233",
+    "veredito": "ok",
+    "motivo": "Lighthouse 13.6.0, Chrome 156 headless, desktop, servidor local, no commit 498f5f9 (HTML idêntico ao ec01233). Nas 3 páginas: Perf 100, LCP 0,24 s, CLS 0, TBT 0 ms (proxy de lab para INP) e SEO 100 sem is-crawlable (bruto 66/69 por causa do noindex deliberado). Arquivo: artifacts/lighthouse/2026-11-02-498f5f9.json."
+  },
+  "CANON-SEO-07": {
+    "revisor": "Cortex Build",
+    "data": "2026-11-02",
+    "commit": "ec01233",
+    "veredito": "violado",
+    "motivo": "Há JSON-LD Article. As 3 imagens do Article (capas placeholder artigo-exemplo-16x9/4x3/1x1.png) não têm IPTC com autor, link Giro, ID criativo nem TransmissionReference=FR-001. A versão do FR não trava, mas os campos seguem obrigatórios. Não apliquei FR nos placeholders para não inventar ID de criativo."
+  },
+  "CANON-SEO-08": {
+    "revisor": "Cortex Build",
+    "data": "2026-11-02",
+    "commit": "ec01233",
+    "veredito": "violado",
+    "motivo": "Regra dura: 'todo asset passa FR-001 antes de publicar'. As 3 capas são placeholder sem metadado FR-001; falta a arte final do Midas. As proporções são informativas."
+  },
+  "CANON-SEO-09": {
+    "revisor": "Cortex Build",
+    "data": "2026-11-02",
+    "commit": "ec01233",
+    "veredito": "ok",
+    "motivo": "INTERPRETAÇÃO, o Wagner deve confirmar. A §9 não mudou e lista só os dois tipos de notícia (oportunidade/mercado, 60/40). A v1.1.0 §2 passou a reconhecer posts de formato/educação, e este é um. Leio a §9 como a regra das notícias: com 0 notícias, a proporção 60/40 não se aplica. Na v1.0.0 o mesmo post foi atestado como violado; o que mudou foi a §2, não o post."
+  },
+  "CANON-SEO-10": {
+    "revisor": "Cortex Build",
+    "data": "2026-11-02",
+    "commit": "ec01233",
+    "veredito": "ok",
+    "motivo": "Única etapa bloqueante: a aprovação do Wagner, registrada em docs/seo-canonico/aprovacoes/PR1.json (t71u, 2026-11-02, commit ec01233). check.py com 0 falhas e Lighthouse OK. Pitágoras e Midas correm em paralelo, sem travar. O noindex continua."
+  },
+  "CANON-SEO-11": {
+    "revisor": "Cortex Build",
+    "data": "2026-11-02",
+    "commit": "ec01233",
+    "veredito": "ok",
+    "motivo": "Seção de referência (docs 01–08 + diário). Nada no PR contradiz; o template de notícia de mercado só vale para post de mercado."
+  }
+}
