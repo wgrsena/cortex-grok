@@ -1,0 +1,33 @@
+{
+  "data_coleta": "2026-10-25",
+  "baixado_em": "2026-11-01T21:30:00-03:00",
+  "como": "DownloadFile (conector Google Drive do Wagner) -> .xlsx -> CSV por aba (stdlib zipfile/xml, sem dependência). Linhas e colunas vazias removidas; conteúdo das células sem alteração.",
+  "arquivos": {
+    "grupos_a_venda.csv": {
+      "origem": "Portal Clique Vendas (Disal), menu Nova Venda, coleta de 25/10/2026",
+      "drive_nome": "grupos_a_venda_2026-10-25", "aba": "grupos_a_venda",
+      "drive_id": "11Pr1j57-yMF27qZWgzLSUEpRrmFFjB6K7UVOyJ8HYvE",
+      "drive_link": "https://docs.google.com/spreadsheets/d/11Pr1j57-yMF27qZWgzLSUEpRrmFFjB6K7UVOyJ8HYvE/edit",
+      "drive_modificado": "2026-10-25T19:40:15-03:00", "linhas": 1473
+    },
+    "cotas_disponiveis.csv": {
+      "origem": "Portal Clique Vendas (Disal), lista de cotas por grupo/plano (portal mostra no máximo 15)",
+      "drive_nome": "grupos_a_venda_2026-10-25", "aba": "cotas_disponiveis",
+      "drive_id": "11Pr1j57-yMF27qZWgzLSUEpRrmFFjB6K7UVOyJ8HYvE", "linhas": 159
+    },
+    "calendario.csv": {
+      "origem": "WebDisal, calendário de assembleias, coleta de 25/10/2026",
+      "drive_nome": "webdisal_calendario_assembleias_2026-10-25", "aba": "calendario",
+      "drive_id": "1rx8tAWOniq-TcixhE6RHn6lpFtlgG08n9LlCwMR7gGc",
+      "drive_link": "https://docs.google.com/spreadsheets/d/1rx8tAWOniq-TcixhE6RHn6lpFtlgG08n9LlCwMR7gGc/edit",
+      "linhas": 2067
+    }
+  },
+  "imagens": {
+    "origem": "Drive do Wagner, arquivos oportunidade-{50,100,200}mil-{16x9,4x3,1x1}.jpg (criados em 01/11/2026), JPEG 1200 px com XMP DigitalSourceType=trainedAlgorithmicMedia. Ilustrativas: não são o modelo da carta.",
+    "faixa-50": ["1Fgi5XIZ_zL388VTlGrEG-ioEyQuP6uVO", "1bOvLr5K54qujouiHJbinnVM1KhZLAAys", "18jgbckggSPQqvO819K3F8ZzS7VbimK5J"],
+    "faixa-100": ["1ofACOvimxLsZNl6PMfzXqf44e2Pe62u9", "1dB8KqN2yy6wPmp4eQkzdBnyA2KQKNwpi", "1qi4VgoLXz6_kWhAzjchgFV8F7rj4a0DK"],
+    "faixa-200": ["11Q2wtC10IXIP83rN1uBNHdwYSUeKq1QT", "1tOqGKnhwL3QrBNq7B58LZquThnyDPMR4", "1IJy1X0sBK-q864Rg7qFPAhv8iXBo5_Dv"],
+    "faixas_sem_imagem": [80, 180, 250]
+  }
+}

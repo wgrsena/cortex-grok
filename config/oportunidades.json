@@ -1,0 +1,22 @@
+{
+  "_comment": "Config única da rota /oportunidades. WhatsApp e etiquetas vêm de config/site.json (mesma fonte do blog).",
+  "canonical_base": "https://cortexconecta.com.br",
+  "_todo_canonical_base": "TODO: confirmar o domínio que a subconta oficial HighLevel serve (com ou sem www). Nunca lab.cortexconecta.com.br.",
+  "hosts_proibidos_canonical": ["lab.cortexconecta.com.br"],
+  "rota": "/oportunidades/",
+  "faixas": [50000, 80000, 100000, 180000, 200000, 250000],
+  "top_k": 3,
+  "max_dias_coleta": 8,
+  "_max_dias_coleta": "Regra do solver v1.1: oportunidade desatualizada se a coleta tem mais de 8 dias; acima disso o gerador não publica cards.",
+  "coleta_dir": "dados/oportunidades/coleta-2026-10-25",
+  "bcb_arquivo": "dados/oportunidades/bcb-sgs-20749.json",
+  "bcb_max_dias_busca": 45,
+  "fr_padrao": "FR-001",
+  "_todo_fr": "TODO: FR-001 é provisório; trocar pelo código definitivo do Wagner.",
+  "utm_source": "cortexconecta",
+  "utm_medium": "oportunidades",
+  "utm_content": "CRIATIVO-TODO",
+  "_todo_utm_content": "TODO: ID do criativo (placeholder central; um só lugar).",
+  "autor": {"nome": "Autor a definir (TODO)", "imagem": "/oportunidades/assets/img/autor-todo.png", "cargo": "TODO"},
+  "publisher": "Conecta Consórcios"
+}
