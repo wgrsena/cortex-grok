@@ -1,0 +1,11 @@
+{
+  "_aviso": "EXEMPLO SINTÉTICO. Dados informados pelo Wagner em 28/10/2026 (Top 5 embutido 25%), NÃO validados contra a planilha mestra. Taxa ADM de 3304, 3308 e 3312 não foi informada: 18% assumido só para este exemplo. Mediana lida como % da categoria (suposição).",
+  "data_coleta": "2026-10-25",
+  "grupos": [
+    {"grupo": "3301", "categoria": 70800, "taxa_adm": 18, "cartas": 5, "parcela_antes": 1921, "mediana_lance_livre": 45.56, "prazo_restante": 38, "pct_embutido": 25, "tem_lance_fixo": true, "proxima_assembleia": "2026-11-26"},
+    {"grupo": "3304", "categoria": 69620, "taxa_adm": 18, "_taxa_adm": "suposição do exemplo", "cartas": 4, "parcela_antes": 1797, "mediana_lance_livre": 46.67, "prazo_restante": 40, "pct_embutido": 25, "tem_lance_fixo": true, "proxima_assembleia": "2026-11-12"},
+    {"grupo": "3308", "categoria": 75520, "taxa_adm": 18, "_taxa_adm": "suposição do exemplo", "cartas": 9, "parcela_antes": 1903, "mediana_lance_livre": 48.33, "prazo_restante": 41, "pct_embutido": 25, "tem_lance_fixo": true, "proxima_assembleia": "2026-11-26"},
+    {"grupo": "3314", "categoria": 70800, "taxa_adm": 20, "cartas": 5, "parcela_antes": 1532, "mediana_lance_livre": 54, "prazo_restante": 48, "pct_embutido": 25, "tem_lance_fixo": true, "proxima_assembleia": "2026-11-26"},
+    {"grupo": "3312", "categoria": 81420, "taxa_adm": 18, "_taxa_adm": "suposição do exemplo", "cartas": 7, "parcela_antes": 1836, "mediana_lance_livre": 54, "prazo_restante": 46, "pct_embutido": 25, "tem_lance_fixo": true, "proxima_assembleia": "2026-11-26"}
+  ]
+}

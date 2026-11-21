@@ -1,0 +1,40 @@
+{
+  "snapshot_id": "sint-1",
+  "atualizado_em": "2026-10-26T00:00:00Z",
+  "cotas": [
+    {
+      "cota_id": "A",
+      "grupo": "001000",
+      "serie": "0010",
+      "tipo_bem": "veiculo",
+      "plano_pct": 100,
+      "credito": "70000",
+      "taxa_pct": "0.16",
+      "parcela": "900",
+      "pct_embutido_max": "0.10",
+      "tem_lance_fixo": false,
+      "lance_fixo_pct": "0.25",
+      "n_ofertantes_fixo_medio": null,
+      "qtd_min": 2,
+      "qtd_truncada": false,
+      "status": "disponivel",
+      "c": [
+        "0.20",
+        "0.20",
+        "0.18",
+        null,
+        "0.25",
+        "0.19"
+      ],
+      "lance_ref_irmaos": null,
+      "qtd_fixo_contemplado_mes": null,
+      "categoria_veiculo": "carro",
+      "prazo_total": null,
+      "mediana_lance_livre": "0.0800",
+      "data_coleta": "2026-10-26",
+      "proxima_assembleia": "2026-11-16"
+    }
+  ],
+  "_aviso": "EXEMPLO SINTÉTICO do contrato (v1.1); não é dado real",
+  "_colunas_fato_i1": "I1 (0005): status, categoria_veiculo, qtd_min, qtd_truncada, lance_fixo_pct, n_ofertantes_fixo_medio, lance_ref_irmaos e prazo_total viram colunas tipadas da fato_cotas (scrap/resumo_semanal.linhas_fato_cotas); o restante (M, p, ...) e os valores originais ficam em extra. Frações 0..1 (I2)."
+}
